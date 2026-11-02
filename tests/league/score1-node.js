@@ -21,7 +21,7 @@ for (const name of ['build-maps', 'tech-data', 'build', 'econ-data', 'econ', 'le
   if (name === 'build') text = text.replace('  let S = null;',
     '  let S = null; globalThis.editor = { set:s=>S=s, budgetShortfall, canPlace, nearestBuildTile, placementReason, markBuildSite };');
   if (name === 'league') text = text.replace('let L = null;', 'let L = globalThis.session;')
-    .replace('KCP.league = {', 'globalThis.coachSteps = coachSteps; KCP.league = {');
+    .replace('KCP.league = {', 'globalThis.coachSteps = coachSteps; globalThis.rev19Copy = typeof rev19Copy === "function" ? rev19Copy : undefined; KCP.league = {'); // rev19 #90: 새 문구 함수도 실제 소스로 제공, 기준판에는 없다.
   vm.runInContext(text, ctx, { filename:`VM:${name}.js` });
 }
 const B = ctx.KCP.buildGame, C = ctx.KCP.leagueCore, E = ctx.editor;
@@ -165,17 +165,20 @@ test('T F4 all eight coach scene prefixes', () => {
   const source = fs.readFileSync(path.resolve(__dirname,'../../ui/league.js'),'utf8');
   const start = source.indexOf('  function updateCoach('), end = source.indexOf('  function coachAction()',start);
   assert.ok(start >= 0 && end > start);
+  const helpers = ['coachLineTarget', 'coachImmediate', 'coachSiteTarget', 'coachMarkList'] // rev19 #90: 코치 표시가 호출하는 실제 함수 의존성.
+    .map(name => source.match(new RegExp(`^  function ${name}\\([^]*?^  }`, 'm'))?.[0] || '').join('\n'); // rev19 #90: 기준판에 없는 새 함수는 제외한다.
   const task = {textContent:''}, action = {textContent:''};
-  const element = {dataset:{}, querySelector:s => s === '#lg-coach-task' ? task : action};
+  const element = {dataset:{}, getClientRects:() => [{}], querySelector:s => s === '#lg-coach-task' ? task : action}; // rev19 #90: 코치 표시 여부를 읽는 최소 DOM 대역.
   const scenes = ['근거 하나','자리 판단','자리 판단','시험 1주','약속','예측 대 실제','원인 하나','다음 달'];
   const context = {
     L:{coach:{round:1,step:0,builds:0},snap:{round:1,phase:'plan'}}, BG:B,
     monthNote:() => ({n:{}}), planIssueCounts:() => ({unlinked:0,unlinkedNames:[],waiting:0}),
     coachSteps:ctx.coachSteps, performance, // r2 3절 2: 단계 표시 시각(1,500ms) 계산에 필요한 전역
+    rev19Copy:ctx.rev19Copy, // rev19 #90: coachMarkList의 칸 이름표 문구 의존성.
     updatePlanIssues() {}, // rev18: 잘라 실행한 코치 장면 검사에 문제 칩 갱신 대역 제공.
     document:{getElementById:id => id === 'lg-coach' ? element : null, querySelector:() => null,querySelectorAll:() => []}
   };
-  vm.createContext(context); vm.runInContext(source.slice(start,end),context);
+  vm.createContext(context); vm.runInContext(helpers + '\n' + source.slice(start,end),context); // rev19 #90
   for (let i=0;i<8;i++) {
     context.L.coach.step=i;
     vm.runInContext('updateCoach(false)',context);

@@ -2666,6 +2666,25 @@
     });
     return best;
   }
+  function coachSiteTile(type) {
+    if (!S?.st) return null;
+    const key = JSON.stringify([type, S.st.builds.map(b => [b.t, b.i]), S.st.policies]);
+    const cached = S.coachSiteCache;
+    if (cached?.pack === PK && cached.league === LG && cached.key === key) return cached.tile;
+    const occupied = new Set(S.st.builds.map(b => b.i)), bi = S.st.builds.length;
+    let best = null, score = Infinity, distance = Infinity;
+    TILES.forEach(T => {
+      if (occupied.has(T.i) || T.t === "forest" || siteRule(type, T) !== "") return;
+      const plan = { ...S.st, builds: [...S.st.builds, { t: type, i: T.i }] };
+      const pts = complaints(plan).items.reduce((sum, item) => sum + (item.bi === bi ? item.pts : 0), 0);
+      const d = Math.min(...TOWNS.map(town => hexDist(T.i, town.tile)));
+      if (pts < score || (pts === score && (d < distance || (d === distance && (best == null || T.i < best))))) {
+        best = T.i; score = pts; distance = d;
+      }
+    });
+    S.coachSiteCache = { pack: PK, league: LG, key, tile: best };
+    return best;
+  }
   function placementReason(type, i, check) {
     if (!check.siteRule || toolLocked(type) || lockedMsg()) return check.why;
     return check.why + " · " + (nearestBuildTile(type, i) == null ? "같은 도구로 지을 칸이 지도에 없어요" : "규칙상 가능한 가장 가까운 칸 표시");
@@ -4685,7 +4704,7 @@
     powerChipDefinition, replayMonth, skipReplay, mapMotion, setMapMood, setViewInset, syncLensKeyTop, syncResultToastPosition, hideTouchTip,
     finishTrial: () => { if (!S?.alive || !S.run || S.run.replay) return false; S.run.k = S.run.res.H - 1; updateRunPanel(1); finishRun({ quiet: true }); return true; },
     mount, saveView, restoreView, lastTrial, pruneTrials, openHelp: trigger => { if (S?.alive) { S.opts.onDrawer?.(); openHelp(trigger); } }, clearTrialDisplay: () => { if (S?.alive) { S.result = null; refreshHUD(); placeBannerValues(); request(); } }, closeDrawer: () => { if (S?.alive) closeDrawer(true); },
-    current: () => (S ? S.st : null), planIssues, townLook, nearestTown, focusTiles,
+    current: () => (S ? S.st : null), planIssues, townLook, nearestTown, focusTiles, coachSiteTile,
     lineState: () => ({ start: S?.lineStart ?? null, end: S?.pending?.end ?? null }),
     refresh: (opts = {}) => { if (S) { syncTownLook(); S.net = network(S.st); if (opts.static !== false || S.staticSeason !== currentMapSeason()) S.dirtyStatic = true; refreshHUD(); renderSeasons(); renderDrawer(); placeBannerValues(); updateAria(); request(); } },
     setSeason: id => { if (S && SEASONS.some(x => x.id === id) && S.st.season !== id) { S.st.season = id; S.result = null; S.dirtyStatic = true; refreshHUD(); renderSeasons(); request(); } },

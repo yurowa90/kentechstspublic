@@ -634,13 +634,11 @@ def clue_and_evidence(checks, page, a, label):
               f"{label} 공급량 정의·부호 없는 단서 순서 안내")
     weather_card = page.locator('[data-missed="weather"] .lg-out-clue')
     if weather_card.count():
-        # rev10 R1: 좁은 화면의 중복 단서만 숨길 수 있다. 원문은 별도 보이는 영역에 남아야 한다.
-        duplicate = (page.viewport_size['width'] <= 480 and not weather_card.is_visible() and
-                     page.locator('#lg-missed').evaluate("""(root,text)=>{
-                       const walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-                       while(walk.nextNode()) {const n=walk.currentNode;
-                         if(n.textContent.includes(text)&&n.parentElement.checkVisibility({visibilityProperty:true})) return true;}
-                       return false;}""", short))
+        # rev19 #90 개정 1: 열린 뒤 숨긴 카드 단서는 모든 너비에서 more DOM에 남아야 한다(접힘 허용).
+        duplicate = (page.locator('#lg-missed[data-opened="true"]').count() == 1 and
+                     not weather_card.is_visible() and
+                     page.locator('#lg-outage-more').count() == 1 and
+                     short in page.locator('#lg-outage-more').text_content())
         checks.ok(duplicate or (weather_card.is_visible() and weather_card.inner_text() == short), f"{label} 날씨 카드 = 검산된 짧은 단서 API")
     more = page.locator("#lg-outage-more")
     required(checks, more.count() == 1, f"{label} #lg-outage-more 상세 단서 DOM 누락 또는 중복")

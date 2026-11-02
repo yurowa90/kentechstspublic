@@ -29,6 +29,7 @@ assert.equal(source.split('KCP.league = {').length, 2);
 vm.runInContext(source.replace('let L = null;', 'let L = globalThis.__session;')
   .replace('KCP.league = {', 'globalThis.__hooks = { decisionsHTML, promiseResultHTML, promiseComparison, promiseVerdictShort, resultHTML, reasonStartsHTML, trialGoals, predictionHTML, gridFillHTML }; KCP.league = {'), ctx);
 const api = ctx.__hooks, C = ctx.KCP.leagueCore, B = ctx.KCP.buildGame;
+function stripTermAbbr(html) { return html.replace(/<abbr class="lg-term"[^>]*>(.*?)<\/abbr>/gs, '$1'); } // rev19 #90: 낱말 풀이 태그만 벗겨 기존 글자 계약을 비교한다.
 // 도시 식별자는 기존 자료에서 고른다. 사용자 이름·실제 회사 이름이 없는 가상 기록이다.
 const ids = C.regionOf('south').teams.slice(0, 2).map(t => t.id), id = ids[0];
 const S = C.newState('D82UXFIX', 'south', 0, ids, { turns: 12, seedMode: 'fixed' });
@@ -303,7 +304,7 @@ S.results.forEach(res => { res.team[id].co2Prod = 140; });
 function co2Cell(res = S.results.at(-1)) {
   // rev11 R5: 결과의 생산 표기 순서만 통일한다.
   // rev16 #74-2: Δ 숫자·단위의 nowrap span은 허용, 기존 글자·순서는 그대로 검산한다.
-  return api.resultHTML(S, res).match(/<div><dt>CO₂ 생산\(이번 달\)<\/dt>(.*?)<\/div>/s)[1].replace(/<\/?span\b[^>]*>/g, '');
+  return stripTermAbbr(api.resultHTML(S, res)).match(/<div><dt>CO₂ 생산\(이번 달\)<\/dt>(.*?)<\/div>/s)[1].replace(/<\/?span\b[^>]*>/g, ''); // rev19 #90
 }
 test('S6 계통 주제 CO₂: 31→28일 하루 평균 같으면 Δ 0, 월 합계 620→560은 보조', () => {
   months[1] = { topic: 'grid', confirmed: true }; note();
@@ -371,7 +372,7 @@ for (const days of [7, 30]) for (const topic of ['uns', 'grid']) for (const lega
       ...S.rounds[0], days, unsPct:3, gridMWh:7, outH:days / 7, co2:9999,
       ...(!legacy ? { co2Prod:days * 8 } : {}) };
     const n = note(topic); n.trial = { ...trial };
-    const html = api.resultHTML(S, S.results[0]), basis = days === 7 ? '시험 1주 대비' : `시험 ${days}일 대비`;
+    const html = stripTermAbbr(api.resultHTML(S, S.results[0])), basis = days === 7 ? '시험 1주 대비' : `시험 ${days}일 대비`; // rev19 #90
     // rev11 R5: 표지 순서 변경 뒤에도 세 결과 칸의 수치 계약을 그대로 검사한다.
     const cells = [...html.matchAll(/<div><dt>(정전\(이번 달\)|정전 시간\(이번 달\)|CO₂ 생산\(이번 달\))<\/dt>(.*?)<\/div>/gs)];
     assert.equal(cells.length, 3);

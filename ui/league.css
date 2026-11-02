@@ -1029,7 +1029,10 @@ html.v2-league-lobby .lg-lobby .v2-kicker { color: var(--ui-cyan, #71dceb); }
 #lg-watch button { max-width: 88px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* rev10: 배지는 '이번 달 볼 것' 글자와 같은 12px(#lg-watch > span)을 물려받는다. 1280에서 14px이면 '근거 고르기'가 88px 상한에 말줄임된다. */
 #lg-watch #lg-watch-inline { display: contents; }
-#lg-outage-card-clues { display: none; }
+#lg-outage-card-clues { display: block; }
+/* 열린 카드의 단서 원문은 모든 너비에서 '단서 더 보기'로 읽는다. 열기 전 카드 단서는 보존한다. */
+#lg-missed[data-opened="true"] .lg-out-clue { display: none; }
+abbr.lg-term { text-decoration: underline dotted; cursor: help; }
 .lg-team-map #bd-mapnote { display: none; }
 .lg-lenses { border: 0; padding: 0; background: transparent; position: relative; }
 .lg-team-map #bd-mapbar { z-index: 28; }
@@ -1660,6 +1663,7 @@ html.v2-still #bd-hud :is(.fx-flash-up, .fx-flash-down) :is(.v2-cap-k, .v2-cap-v
   .lg-team-map #lg-watch #lg-watch-more { padding-inline: 4px; }
 }
 @media (max-width: 480px) {
+  /* 기존 세 카드 속성의 폰 규칙도 유지한다. 열린 카드 전체에는 위의 공통 숨김 규칙이 적용된다. */
   #lg-panel #lg-outage-cards[data-repeated-clues="true"] .lg-out-clue { display: none; }
   #lg-outage-card-clues { display: block; }
 }

@@ -101,6 +101,7 @@ tests/league/review/62-rev14b.js                     rest
 tests/league/review/63-rev15.js                      rest
 tests/league/review/64-rev16.js                      rest
 tests/league/review/65-rev17.js                      rest
+tests/league/review/66-rev19.js                      rest
 tests/league/review/66-offer-hist.js                 rest
 tests/league/review/7-fiscal-approval.js             rest
 tests/league/review/8-offers.js                      rest

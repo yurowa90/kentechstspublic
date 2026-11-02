@@ -63,7 +63,7 @@ python3 tests/ci/judge.py --kind node --logs /tmp/node
 |---|---|
 | `syntax` | `node --check *.js ext/*.js games/*.js ui/*.js`와 `node-all.sh --check`(Node 목록과 파일 대조) |
 | `plan` | `browser.sh --shards`로 `suites.txt`를 확인하고 샤드 번호 목록(JSON)을 만든다. `browser`의 매트릭스가 이것이다 |
-| `node` | `node-suites.txt`의 heavy(`review/11-tech-balance.js` 하나)와 rest(나머지 99개 — `node-all.sh --check`의 등록 101줄에서 heavy 1개와 보조 파일(ignore) 1개를 뺀 수) 두 묶음을 동시에. 옛 커밋을 `git show`로 읽는 검사가 많아 전체 이력을 받는다 |
+| `node` | `node-suites.txt`의 heavy(`review/11-tech-balance.js` 하나)와 rest(나머지 100개 — `node-all.sh --check`의 등록 102줄에서 heavy 1개와 보조 파일(ignore) 1개를 뺀 수) 두 묶음을 동시에. 옛 커밋을 `git show`로 읽는 검사가 많아 전체 이력을 받는다 |
 | `browser` | `plan`이 만든 샤드(지금 여덟)를 macOS 실행기(`macos-15`)에서 동시에. `webkit`이 든 샤드만 WebKit을 더 설치한다. 리눅스로 되돌리면 한글·이모지 글꼴(`fonts-noto-cjk`, `fonts-noto-color-emoji`) 설치 단계가 다시 돈다 |
 | `gate` | 앞의 넷이 모두 성공이어야 성공. 보호 규칙에는 이것 하나만 걸면 된다. 취소·건너뜀은 성공으로 치지 않는다 |
 
@@ -73,7 +73,7 @@ Node는 24.21.0, 브라우저 검사 파이썬은 3.14(맥 로컬은 3.14.7, 끝
 
 ### 샤드 배분
 
-`suites.txt`의 예상초 합이다. `rev14`·`rev14b`의 예상초는 #54 맥 최종 확인(0405541), `rev15`·`rev16`·`feedback`·`sheet`는 갈래 맥 로컬 실측의 실행 시간이다(rev16은 `--all` 실행에서 196초). rev17은 장면 수로 잡은 임시값 420초이며 맥 로컬 첫 실행 뒤 실측으로 바꾼다. rev18은 갈래 맥 로컬 `--all` 실측(78초, 80으로 올림)이다.
+`suites.txt`의 예상초 합이다. `rev14`·`rev14b`의 예상초는 #54 맥 최종 확인(0405541), `rev15`·`rev16`·`feedback`·`sheet`는 갈래 맥 로컬 실측의 실행 시간이다(rev16은 `--all` 실행에서 196초). rev17은 장면 수로 잡은 임시값 420초이며 맥 로컬 첫 실행 뒤 실측으로 바꾼다. rev18은 갈래 맥 로컬 `--all` 실측(78초, 80으로 올림)이다. rev19는 갈래 맥 로컬 `--all` 실측(48초, 60으로 올림)이다.
 
 | 샤드 | 검사 | 예상초 합 |
 |---|---|---|
@@ -83,7 +83,7 @@ Node는 24.21.0, 브라우저 검사 파이썬은 3.14(맥 로컬은 3.14.7, 끝
 | 4 | rev15, rev11, rev8c, ux_s2fix2, ux_coach | 695 |
 | 5 | rev10, d80b, econui, ux_task:tablet, peek, webkit | 684 |
 | 6 | rev17, rev12, s8n, fx_replay, v3a, snaprender, feedback | 1037 |
-| 7 | rev13, rev14b, fx_end, fx_town (fx_map은 맥 전용) | 674 |
+| 7 | rev13, rev14b, rev19, fx_end, fx_town (fx_map은 맥 전용) | 734 |
 | 8 | rev14, rev18, rev9, score1, ux_s2fix, ux_task:mobile, next | 745 |
 
 새 브라우저 검사는 `suites.txt`에 이름·샤드·예상초를 한 줄로 넣고, `baseline-counts.txt`에 맥 로컬 첫 실행의 단언 수·SKIP 수를 넣은 뒤(방 씨앗이나 달 자료에 따라 단언 수가 바뀌는 검사는 관측값이 아니라 통과하는 실행이면 반드시 도는 단언 수와 SKIP이 나올 수 있는 곳 수를 코드에서 세어 넣고, 내역을 그 파일 주석과 커밋 본문에 적는다. 지금 `rev14`·`rev15`), 샤드 합이 고르게 되도록 옮기고 이 표를 다시 계산한다. 아직 파일이 없는 검사를 미리 넣을 때만 넷째 칸에 `optional`을 쓴다(기준 수치는 필수로 바꿀 때 넣는다). 넷째 칸 `mac`은 CI 샤드에서 빼고 맥 로컬 `--all`에서만 돌리는 검사다(아래 'CI에서 빼는 검사'). `optional`이 없는 검사의 파일이 사라지면 '검사 파일 없음'으로 실패한다. 줄 순서가 샤드 안 실행 순서다. CI 매트릭스는 `suites.txt`에 적힌 샤드 번호로 만들어지므로 `ci.yml`을 고칠 필요가 없다. `browser.sh`는 칸 수, 샤드(1 이상의 정수), 예상초, 넷째 칸, 이름 중복, 필수 검사의 기준 수치 누락을 확인하고 어긋나면 2로 멈춘다.

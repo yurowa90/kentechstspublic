@@ -1,0 +1,318 @@
+/* 심야 셔틀 스킨: 80년대 중반 아케이드 야간 주행 오마주
+ * 밝은 설정은 '새벽 오락실'(연보라 바탕, 크림 판, 진보라 글자), 어두운 설정은 남보라 판과 네온 테두리.
+ * 모든 선택자는 html.v2-skin-s-shuttle-permit 아래에만 둔다. 배치(위치·크기·격자)는 바꾸지 않고
+ * 색·테두리·글꼴·그림자·모서리만 바꾼다. 움직이는 CSS 효과는 쓰지 않는다. */
+@media screen {
+  html.v2-skin-s-shuttle-permit:root {
+    --paper: #ede5f8;
+    --sheet: #fffbf2;
+    --sheet-2: #f5effc;
+    --ink: #24124a;
+    --ink-2: #4a3872;
+    --ink-3: #65568a;
+    --line: #cbbde6;
+    --accent: #8a1c9e;
+    --accent-soft: #f1dcf5;
+    --accent-ink: #ffffff;
+    --volt: #8f4f00;
+    --volt-soft: #fde9c2;
+    --ok: #11734a;
+    --warn: #8f5300;
+    --bad: #b0213f;
+    --bad-soft: #fde1e6;
+    --shadow: 0 1px 0 rgba(36, 18, 74, 0.06), 0 10px 24px -16px rgba(138, 28, 158, 0.4);
+    /* 스킨 전용 */
+    --shx-neon: #ff3fb4;
+    --shx-cyan: #0a8fb0;
+    --shx-edge: #d9c8f2;
+    --shx-glow: 0 0 0 1px rgba(138, 28, 158, 0.08), 0 12px 26px -18px rgba(138, 28, 158, 0.55);
+    --shx-top: inset 0 3px 0 #ff5fa8;
+    --shx-stage-line: #8a1c9e;
+    --shx-plate: #fffbf2;
+    --shx-plate-ink: #24124a;
+    --shx-plate-k: #8a1c9e;
+    --shx-chip-k: #4a3872;
+    --shx-tone-speed: #8a1c9e;
+    --shx-tone-ok: #0a6f86;
+    --shx-tone-warn: #8f5300;
+    --shx-tone-bad: #b0213f;
+    --shx-tone-volt: #8f4f00;
+    --shx-clear: #0a8fb0;
+    --shx-rain: #5b4bd6;
+    --shx-fog: #8a7fa8;
+    --shx-task: var(--volt-soft);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-s-shuttle-permit:root:not([data-theme="light"]) {
+      --paper: #0c0a1d;
+      --sheet: #161130;
+      --sheet-2: #1e173f;
+      --ink: #f3eeff;
+      --ink-2: #c9bdf0;
+      --ink-3: #a395d0;
+      --line: #3c2f6e;
+      --accent: #39e2ff;
+      --accent-soft: #123b54;
+      --accent-ink: #0a0820;
+      --volt: #ffd257;
+      --volt-soft: #3b2d10;
+      --ok: #54f2a8;
+      --warn: #ffc24a;
+      --bad: #ff6b92;
+      --bad-soft: #3f1230;
+      --shadow: 0 1px 0 rgba(0, 0, 0, 0.35), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
+      --shx-neon: #ff3fb4;
+      --shx-cyan: #39e2ff;
+      --shx-edge: #4a3a86;
+      --shx-glow: 0 0 0 1px rgba(255, 63, 180, 0.14), 0 0 26px -12px rgba(255, 63, 180, 0.6);
+      --shx-top: inset 0 2px 0 rgba(57, 226, 255, 0.55);
+      --shx-stage-line: #ff3fb4;
+      --shx-plate: #120d2b;
+      --shx-plate-ink: #f3eeff;
+      --shx-plate-k: #ff8fd6;
+      --shx-chip-k: #c9bdf0;
+      --shx-tone-speed: #ffe066;
+      --shx-tone-ok: #39e2ff;
+      --shx-tone-warn: #ffc24a;
+      --shx-tone-bad: #ff6b92;
+      --shx-tone-volt: #ffd257;
+      --shx-clear: #39e2ff;
+      --shx-rain: #8c7dff;
+      --shx-fog: #b3a8d6;
+      --shx-task: var(--sheet-2);
+      color-scheme: dark;
+    }
+  }
+  html.v2-skin-s-shuttle-permit:root[data-theme="dark"] {
+    --paper: #0c0a1d;
+    --sheet: #161130;
+    --sheet-2: #1e173f;
+    --ink: #f3eeff;
+    --ink-2: #c9bdf0;
+    --ink-3: #a395d0;
+    --line: #3c2f6e;
+    --accent: #39e2ff;
+    --accent-soft: #123b54;
+    --accent-ink: #0a0820;
+    --volt: #ffd257;
+    --volt-soft: #3b2d10;
+    --ok: #54f2a8;
+    --warn: #ffc24a;
+    --bad: #ff6b92;
+    --bad-soft: #3f1230;
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.35), 0 10px 24px -14px rgba(0, 0, 0, 0.8);
+    --shx-neon: #ff3fb4;
+    --shx-cyan: #39e2ff;
+    --shx-edge: #4a3a86;
+    --shx-glow: 0 0 0 1px rgba(255, 63, 180, 0.14), 0 0 26px -12px rgba(255, 63, 180, 0.6);
+    --shx-top: inset 0 2px 0 rgba(57, 226, 255, 0.55);
+    --shx-stage-line: #ff3fb4;
+    --shx-plate: #120d2b;
+    --shx-plate-ink: #f3eeff;
+    --shx-plate-k: #ff8fd6;
+    --shx-chip-k: #c9bdf0;
+    --shx-tone-speed: #ffe066;
+    --shx-tone-ok: #39e2ff;
+    --shx-tone-warn: #ffc24a;
+    --shx-tone-bad: #ff6b92;
+    --shx-tone-volt: #ffd257;
+    --shx-clear: #39e2ff;
+    --shx-rain: #8c7dff;
+    --shx-fog: #b3a8d6;
+    --shx-task: var(--sheet-2);
+    color-scheme: dark;
+  }
+
+  /* ---------- 바탕: 새벽 하늘 / 밤하늘과 바닥 격자 ---------- */
+  html.v2-skin-s-shuttle-permit body {
+    background:
+      radial-gradient(1100px 460px at 72% -8%, rgba(255, 143, 196, 0.32), transparent 62%),
+      radial-gradient(900px 480px at -10% 12%, rgba(164, 147, 221, 0.3), transparent 60%),
+      linear-gradient(180deg, #efe6fb 0%, #ede5f8 45%, #f3e8f3 100%),
+      var(--paper);
+    background-attachment: fixed;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-s-shuttle-permit:not([data-theme="light"]) body {
+      background:
+        radial-gradient(1100px 520px at 74% -10%, rgba(255, 63, 180, 0.16), transparent 62%),
+        radial-gradient(900px 520px at -12% 18%, rgba(57, 226, 255, 0.09), transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M0 63.5H64M63.5 0V64' fill='none' stroke='%238b3dff' stroke-opacity='.09'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, #0d0a22 0%, #0b0819 100%),
+        var(--paper);
+      background-attachment: fixed;
+    }
+  }
+  html.v2-skin-s-shuttle-permit[data-theme="dark"] body {
+    background:
+      radial-gradient(1100px 520px at 74% -10%, rgba(255, 63, 180, 0.16), transparent 62%),
+      radial-gradient(900px 520px at -12% 18%, rgba(57, 226, 255, 0.09), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M0 63.5H64M63.5 0V64' fill='none' stroke='%238b3dff' stroke-opacity='.09'/%3E%3C/svg%3E"),
+      linear-gradient(180deg, #0d0a22 0%, #0b0819 100%),
+      var(--paper);
+    background-attachment: fixed;
+  }
+}
+
+/* 아래 장식은 화면에만 적용한다(인쇄는 기존 밝은 인쇄 모양). */
+@media screen {
+  /* ---------- 상단 띠: 오락기 계기판(두 설정 모두 어두운 띠) ---------- */
+  html.v2-skin-s-shuttle-permit .strip {
+    background-color: #160c34;
+    background-image: linear-gradient(90deg, #170c38 0%, #22104c 50%, #170c38 100%);
+    color: #f4efff;
+    box-shadow: inset 0 -2px 0 #ff3fb4, 0 10px 24px -14px rgba(255, 63, 180, 0.7);
+  }
+  html.v2-skin-s-shuttle-permit .strip a { color: #f4efff; }
+  html.v2-skin-s-shuttle-permit .strip .ttl { color: #ffffff; text-shadow: 0 0 10px rgba(57, 226, 255, 0.55); }
+  html.v2-skin-s-shuttle-permit .strip .ttl small { color: #e3dafc; text-shadow: none; }
+  html.v2-skin-s-shuttle-permit .phases { background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(255, 63, 180, 0.35); }
+  html.v2-skin-s-shuttle-permit .phases button { color: #f4efff; }
+  html.v2-skin-s-shuttle-permit .phases button[aria-pressed="true"] {
+    background: #39e2ff;
+    color: #0a0820;
+    box-shadow: 0 0 14px -2px rgba(57, 226, 255, 0.75);
+  }
+  html.v2-skin-s-shuttle-permit .timer .clock {
+    color: #ffe066;
+    text-shadow: 0 0 10px rgba(255, 224, 102, 0.45);
+    letter-spacing: 0.04em;
+  }
+  html.v2-skin-s-shuttle-permit .timer .clock.low { color: #ff8fb0; text-shadow: 0 0 10px rgba(255, 107, 146, 0.5); }
+  html.v2-skin-s-shuttle-permit .timer button,
+  html.v2-skin-s-shuttle-permit .timer select {
+    color: #f4efff;
+    border-color: rgba(244, 239, 255, 0.42);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+  html.v2-skin-s-shuttle-permit .timer button:hover { border-color: #39e2ff; }
+  html.v2-skin-s-shuttle-permit .strip :focus-visible { outline-color: #39e2ff; }
+  html.v2-skin-s-shuttle-permit .progress { background: linear-gradient(90deg, #ff3fb4, #39e2ff); }
+
+  /* ---------- 장면 ---------- */
+  html.v2-skin-s-shuttle-permit .v2-stage {
+    border: 1px solid var(--shx-stage-line);
+    background: #0b0820;
+    box-shadow: 0 0 0 3px rgba(255, 63, 180, 0.12), 0 18px 40px -22px rgba(138, 28, 158, 0.85);
+  }
+  html.v2-skin-s-shuttle-permit .v2-stage-top {
+    padding: 5px 12px 6px;
+    border: 1px solid var(--shx-stage-line);
+    border-radius: 10px;
+    background: var(--shx-plate);
+    box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.55);
+  }
+  html.v2-skin-s-shuttle-permit .v2-stage-kicker { color: var(--shx-plate-k); }
+  html.v2-skin-s-shuttle-permit .v2-stage-title {
+    color: var(--shx-plate-ink);
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 760px) {
+    html.v2-skin-s-shuttle-permit .v2-stage-top { padding: 3px 9px 4px; border-radius: 8px; }
+    html.v2-skin-s-shuttle-permit .v2-stage-title { font-size: 15px; }
+    /* 낮은 장면(면접실·성찰)에서는 영문 표지를 접어 도로가 보이게 한다 */
+    html.v2-skin-s-shuttle-permit .v2-stage[data-phase="room"] .v2-stage-kicker,
+    html.v2-skin-s-shuttle-permit .v2-stage[data-phase="reflect"] .v2-stage-kicker { display: none; }
+  }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip {
+    border: 1px solid var(--shx-edge);
+    background: var(--shx-plate);
+    color: var(--shx-plate-ink);
+    box-shadow: 0 4px 12px -8px rgba(0, 0, 0, 0.6);
+  }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip-k { color: var(--shx-chip-k); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip b { font-weight: 600; }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-accent { border-color: var(--shx-tone-speed); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-accent b { color: var(--shx-tone-speed); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-ok { border-color: var(--shx-tone-ok); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-ok b { color: var(--shx-tone-ok); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-warn { border-color: var(--shx-tone-warn); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-warn b { color: var(--shx-tone-warn); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-bad { border-color: var(--shx-tone-bad); border-width: 2px; }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-bad b { color: var(--shx-tone-bad); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-volt { border-color: var(--shx-tone-volt); }
+  html.v2-skin-s-shuttle-permit .v2-stage-chip.tone-volt b { color: var(--shx-tone-volt); }
+
+  /* ---------- 머리 안내 ---------- */
+  html.v2-skin-s-shuttle-permit .brief .task {
+    background: var(--shx-task);
+    border-left-color: var(--shx-neon);
+    box-shadow: var(--shx-glow);
+  }
+  html.v2-skin-s-shuttle-permit .brief .scenario .label { color: var(--accent); letter-spacing: 0.14em; }
+
+  /* ---------- 판(panel)과 제목 ---------- */
+  html.v2-skin-s-shuttle-permit .panel {
+    border-color: var(--shx-edge);
+    box-shadow: var(--shx-top), var(--shx-glow);
+  }
+  html.v2-skin-s-shuttle-permit .panel > h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  html.v2-skin-s-shuttle-permit .panel > h3::before {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, var(--shx-neon), var(--shx-cyan));
+    box-shadow: 0 0 8px rgba(255, 63, 180, 0.6);
+  }
+  html.v2-skin-s-shuttle-permit .sp-panel h4 { color: var(--ink); letter-spacing: 0.01em; }
+  html.v2-skin-s-shuttle-permit .qcard,
+  html.v2-skin-s-shuttle-permit details.reveal {
+    border-color: var(--shx-edge);
+    box-shadow: var(--shx-glow);
+  }
+  html.v2-skin-s-shuttle-permit .qcard .who { letter-spacing: 0.08em; }
+
+  /* ---------- 버튼·입력·탭 ---------- */
+  html.v2-skin-s-shuttle-permit .btn { border-radius: 5px; }
+  html.v2-skin-s-shuttle-permit .btn:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  html.v2-skin-s-shuttle-permit .btn.primary {
+    background-color: var(--accent);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+    box-shadow: 0 0 0 1px rgba(255, 63, 180, 0.3), 0 8px 18px -10px var(--accent);
+    letter-spacing: 0.02em;
+  }
+  html.v2-skin-s-shuttle-permit .sp-step {
+    border-radius: 999px;
+    border-color: var(--shx-neon);
+    font-weight: 700;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 63, 180, 0.18);
+  }
+  html.v2-skin-s-shuttle-permit .sp-number,
+  html.v2-skin-s-shuttle-permit .sp-control {
+    border-color: var(--shx-edge);
+    border-radius: 5px;
+  }
+  html.v2-skin-s-shuttle-permit .sp-number { font-family: var(--mono); font-weight: 600; }
+  html.v2-skin-s-shuttle-permit .sp-check input { accent-color: var(--accent); }
+  html.v2-skin-s-shuttle-permit .tabs { border-bottom-color: var(--shx-edge); }
+  html.v2-skin-s-shuttle-permit .tabs button[aria-selected="true"] { border-bottom-color: var(--shx-neon); }
+  html.v2-skin-s-shuttle-permit .sp-choices .sp-choice[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--accent-soft), 0 0 18px -6px var(--accent); }
+  html.v2-skin-s-shuttle-permit .seg { border-color: var(--shx-edge); }
+
+  /* 조건별 카드: 왼쪽 네온 띠(맑음·비·안개) */
+  html.v2-skin-s-shuttle-permit .sp-speed,
+  html.v2-skin-s-shuttle-permit .sp-test-card,
+  html.v2-skin-s-shuttle-permit .sp-person,
+  html.v2-skin-s-shuttle-permit .sp-assumption { border-color: var(--shx-edge); }
+  html.v2-skin-s-shuttle-permit .sp-speed:has(#sp-v-clear),
+  html.v2-skin-s-shuttle-permit #sp-test-card-clear { box-shadow: inset 4px 0 0 var(--shx-clear); }
+  html.v2-skin-s-shuttle-permit .sp-speed:has(#sp-v-rain),
+  html.v2-skin-s-shuttle-permit #sp-test-card-rain { box-shadow: inset 4px 0 0 var(--shx-rain); }
+  html.v2-skin-s-shuttle-permit .sp-speed:has(#sp-v-fog),
+  html.v2-skin-s-shuttle-permit #sp-test-card-fog { box-shadow: inset 4px 0 0 var(--shx-fog); }
+
+  /* 표 */
+  html.v2-skin-s-shuttle-permit .sp-table thead th { background: var(--sheet-2); }
+  html.v2-skin-s-shuttle-permit .sp-metrics > div { border-color: var(--shx-edge); box-shadow: var(--shx-top); }
+  html.v2-skin-s-shuttle-permit .chip { border-color: var(--shx-edge); }
+}

@@ -1,0 +1,401 @@
+/* 2024 켄트로늄 정착 시뮬레이터 스킨: 90년대 후반 외계 행성 실시간 전략 게임의 사령 콘솔 오마주
+ * 어두운 화면: 빗각 강철 테두리의 검은 금속 콘솔, 초록·청록 HUD 글자, 주황 경고.
+ * 밝은 화면: 옅은 강철·미색 패널과 남색 글자.
+ * 모든 선택자는 html.v2-skin-2024 아래에만 둔다. #strip/.strip의 위치·top·여백·z-index·배경은 바꾸지 않는다
+ * (띠 배경은 토큰 --ink로만 바뀐다). 게임 내부 배치(grid·width·display·overflow·position)도 그대로 둔다.
+ * 초점 윤곽은 색만 바꾼다. 누르기 영역과 글자 크기는 줄이지 않는다. 지도 칸 색(보고서 자료)은 건드리지 않는다. */
+
+@media screen {
+  html.v2-skin-2024:root {
+    --paper: #d6dde5;
+    --sheet: #f3f5f8;
+    --sheet-2: #e6ebf0;
+    --ink: #0d1a2e;
+    --ink-2: #2c3b52;
+    --ink-3: #435269;
+    --line: #8d99aa;
+    --accent: #005f6b;
+    --accent-soft: #cbe5e9;
+    --accent-ink: #ffffff;
+    --volt: #8a4d00;
+    --volt-soft: #f5e2c0;
+    --ok: #13643a;
+    --warn: #8a4d00;
+    --bad: #ab2817;
+    --bad-soft: #f5d9d3;
+    --kn-hi: #ffffff;
+    --kn-lo: #6c7a8d;
+    --kn-dk: #3a4558;
+    --kn-plate: #cdd5df;
+    --kn-plate-2: #b4bfcc;
+    --kn-plate-ink: #0d1a2e;
+    --kn-hud: #005f6b;
+    --kn-scr: #edf1f5;
+    --kn-scr-ink: #0d1a2e;
+    --kn-scr-line: #9aa7b8;
+    --kn-glow: rgba(0, 95, 107, 0.28);
+    --kn-chip-bg: #edf1f5;
+    --kn-chip-ink: #2c3b52;
+    --kn-chip-val: #0d1a2e;
+    --kn-bar-ink: #0d1a2e;
+    --kn-bar-kick: #00434c;
+    --kn-desk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 47.5h48M47.5 0v48' stroke='%23b9c3cf' stroke-width='1'/%3E%3Ccircle cx='4' cy='4' r='1.2' fill='%23a9b4c2'/%3E%3C/svg%3E");
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-2024:root:not([data-theme="light"]) {
+      --paper: #06080b;
+      --sheet: #141a21;
+      --sheet-2: #0c1117;
+      --ink: #d3f3e4;
+      --ink-2: #a4c9bb;
+      --ink-3: #8fb4a7;
+      --line: #3a475a;
+      --accent: #43d9ea;
+      --accent-soft: #0e3540;
+      --accent-ink: #021619;
+      --volt: #ffb53b;
+      --volt-soft: #33250b;
+      --ok: #63ef8f;
+      --warn: #ffb53b;
+      --bad: #ff7262;
+      --bad-soft: #3d1713;
+      --kn-hi: #56657a;
+      --kn-lo: #05070a;
+      --kn-dk: #000000;
+      --kn-plate: #252e3b;
+      --kn-plate-2: #161c25;
+      --kn-plate-ink: #7dffaa;
+      --kn-hud: #7dffaa;
+      --kn-scr: #03070a;
+      --kn-scr-ink: #7dffaa;
+      --kn-scr-line: #1f5a63;
+      --kn-glow: rgba(67, 217, 234, 0.3);
+      --kn-chip-bg: #03070a;
+      --kn-chip-ink: #a4c9bb;
+      --kn-chip-val: #7dffaa;
+      --kn-bar-ink: #7dffaa;
+      --kn-bar-kick: #43d9ea;
+      --kn-desk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 47.5h48M47.5 0v48' stroke='%23121a22' stroke-width='1'/%3E%3Ccircle cx='4' cy='4' r='1.2' fill='%231c2733'/%3E%3C/svg%3E");
+      color-scheme: dark;
+    }
+  }
+  html.v2-skin-2024:root[data-theme="dark"] {
+    --paper: #06080b;
+    --sheet: #141a21;
+    --sheet-2: #0c1117;
+    --ink: #d3f3e4;
+    --ink-2: #a4c9bb;
+    --ink-3: #8fb4a7;
+    --line: #3a475a;
+    --accent: #43d9ea;
+    --accent-soft: #0e3540;
+    --accent-ink: #021619;
+    --volt: #ffb53b;
+    --volt-soft: #33250b;
+    --ok: #63ef8f;
+    --warn: #ffb53b;
+    --bad: #ff7262;
+    --bad-soft: #3d1713;
+    --kn-hi: #56657a;
+    --kn-lo: #05070a;
+    --kn-dk: #000000;
+    --kn-plate: #252e3b;
+    --kn-plate-2: #161c25;
+    --kn-plate-ink: #7dffaa;
+    --kn-hud: #7dffaa;
+    --kn-scr: #03070a;
+    --kn-scr-ink: #7dffaa;
+    --kn-scr-line: #1f5a63;
+    --kn-glow: rgba(67, 217, 234, 0.3);
+    --kn-chip-bg: #03070a;
+    --kn-chip-ink: #a4c9bb;
+    --kn-chip-val: #7dffaa;
+    --kn-bar-ink: #7dffaa;
+    --kn-bar-kick: #43d9ea;
+    --kn-desk: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 47.5h48M47.5 0v48' stroke='%23121a22' stroke-width='1'/%3E%3Ccircle cx='4' cy='4' r='1.2' fill='%231c2733'/%3E%3C/svg%3E");
+    color-scheme: dark;
+  }
+
+  /* ---------- 바탕: 강철 갑판 격자 ---------- */
+  html.v2-skin-2024 body {
+    background-color: var(--paper);
+    background-image: var(--kn-desk);
+  }
+  html.v2-skin-2024 :focus-visible { outline-color: var(--accent); }
+
+  /* ---------- 상단 띠: 배경은 토큰(--ink)만, 아래에 청록 신호선 ---------- */
+  html.v2-skin-2024 .strip { box-shadow: inset 0 -2px 0 var(--accent); }
+  html.v2-skin-2024 .strip .ttl { letter-spacing: 0.03em; }
+  html.v2-skin-2024 .strip .timer .clock { letter-spacing: 0.06em; }
+  html.v2-skin-2024 .strip .timer button,
+  html.v2-skin-2024 .strip .timer select { border-color: currentColor; border-radius: 2px; }
+  html.v2-skin-2024 .strip :focus-visible { outline-color: currentColor; }
+  html.v2-skin-2024 .phases { border-radius: 2px; }
+  html.v2-skin-2024 .phases button { border-radius: 2px; }
+
+  /* ---------- 공통 창: 빗각 강철 콘솔 ---------- */
+  html.v2-skin-2024 .panel,
+  html.v2-skin-2024 .qcard,
+  html.v2-skin-2024 details.reveal {
+    background: var(--sheet);
+    border: 2px solid;
+    border-color: var(--kn-hi) var(--kn-lo) var(--kn-lo) var(--kn-hi);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px var(--kn-dk), 0 3px 0 rgba(0, 0, 0, 0.18), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+  }
+  html.v2-skin-2024 .panel.locked {
+    border-color: var(--volt);
+    box-shadow: inset 0 0 0 1px var(--kn-dk), 0 0 0 1px var(--volt), 0 10px 22px -16px rgba(0, 0, 0, 0.7);
+  }
+  /* 창 제목: 명판 */
+  html.v2-skin-2024 .panel > h3 {
+    margin: -14px -14px 12px;
+    padding: 7px 12px;
+    background: linear-gradient(180deg, var(--kn-plate), var(--kn-plate-2));
+    color: var(--kn-plate-ink);
+    border-bottom: 1px solid var(--kn-dk);
+    box-shadow: inset 0 1px 0 var(--kn-hi), inset 3px 0 0 var(--accent);
+    font-family: var(--body);
+    letter-spacing: 0.02em;
+  }
+  html.v2-skin-2024 .panel > h3 label { color: var(--kn-plate-ink); }
+  html.v2-skin-2024 .panel > h3 input[type="checkbox"] { accent-color: var(--accent); }
+  html.v2-skin-2024 .panel > h3 .chip,
+  html.v2-skin-2024 .panel > h3 .tag-mine,
+  html.v2-skin-2024 .panel > h3 .tag-official {
+    background: var(--kn-scr);
+    color: var(--kn-scr-ink);
+    border-color: var(--kn-scr-line);
+  }
+  html.v2-skin-2024 .panel > h3 .chip.accent { color: var(--volt); border-color: var(--volt); background: var(--kn-scr); }
+  html.v2-skin-2024 .qcard .who {
+    font-family: var(--mono);
+    color: var(--kn-hud);
+    letter-spacing: 0.08em;
+  }
+  html.v2-skin-2024 details.reveal summary::marker { color: var(--accent); }
+
+  /* ---------- 임무 안내 ---------- */
+  html.v2-skin-2024 .brief .scenario .label { color: var(--kn-hud); font-family: var(--mono); letter-spacing: 0.16em; }
+  html.v2-skin-2024 .brief .task {
+    background: var(--volt-soft);
+    border-left: 4px solid var(--volt);
+    border-radius: 0 2px 2px 0;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  }
+
+  /* ---------- 단추: 빗각 금속 단추 ---------- */
+  html.v2-skin-2024 .btn,
+  html.v2-skin-2024 .seg button,
+  html.v2-skin-2024 .pick button,
+  html.v2-skin-2024 .tray button {
+    background: linear-gradient(180deg, var(--kn-plate), var(--kn-plate-2));
+    color: var(--ink);
+    border: 1px solid var(--kn-dk);
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 0 var(--kn-hi), inset -1px -1px 0 var(--kn-lo);
+  }
+  html.v2-skin-2024 .btn:hover:not([disabled]) { border-color: var(--accent); box-shadow: inset 1px 1px 0 var(--kn-hi), inset -1px -1px 0 var(--kn-lo), 0 0 0 2px var(--kn-glow); }
+  html.v2-skin-2024 .btn:active:not([disabled]),
+  html.v2-skin-2024 .seg button:active:not([disabled]) { box-shadow: inset 1px 1px 0 var(--kn-lo), inset -1px -1px 0 var(--kn-hi); }
+  html.v2-skin-2024 .btn.primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--kn-dk);
+    font-weight: 700;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.4), inset -1px -1px 0 rgba(0, 0, 0, 0.45);
+  }
+  html.v2-skin-2024 .btn.ghost { background: transparent; }
+  html.v2-skin-2024 .btn[aria-pressed="true"],
+  html.v2-skin-2024 .pick button[aria-pressed="true"],
+  html.v2-skin-2024 .tray button[aria-pressed="true"] {
+    background: var(--accent-soft);
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  html.v2-skin-2024 .seg { border: 1px solid var(--kn-dk); border-radius: 2px; }
+  html.v2-skin-2024 .seg button { border: 0; border-radius: 0; }
+  html.v2-skin-2024 .seg button + button { border-left: 1px solid var(--kn-dk); }
+  html.v2-skin-2024 .seg button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  html.v2-skin-2024 .chip { border-radius: 2px; }
+  html.v2-skin-2024 .strip .chip { background: transparent; }
+
+  /* ---------- 탭과 입력 ---------- */
+  html.v2-skin-2024 .tabs { border-bottom-color: var(--kn-lo); }
+  html.v2-skin-2024 .tabs button { font-family: var(--body); }
+  html.v2-skin-2024 .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  html.v2-skin-2024 textarea.note,
+  html.v2-skin-2024 input.note {
+    background: var(--sheet-2);
+    color: var(--ink);
+    border: 1px solid;
+    border-color: var(--kn-lo) var(--kn-hi) var(--kn-hi) var(--kn-lo);
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 0 var(--kn-dk);
+  }
+  html.v2-skin-2024 textarea.note:focus,
+  html.v2-skin-2024 input.note:focus { border-color: var(--accent); }
+
+  /* ---------- 정착지 지도: 콘솔 화면 안에 띄운다(칸 색은 그대로) ---------- */
+  html.v2-skin-2024 .hexwrap {
+    background: var(--kn-scr);
+    border: 1px solid var(--kn-scr-line);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px var(--kn-dk), inset 0 0 18px var(--kn-glow);
+  }
+  html.v2-skin-2024 svg.hexmap polygon { stroke: var(--kn-scr); }
+  html.v2-skin-2024 svg.hexmap polygon.sel { stroke: var(--ink); }
+  html.v2-skin-2024 svg.hexmap polygon:focus-visible { outline-color: var(--accent); }
+
+  /* 지역 표: 장부 */
+  html.v2-skin-2024 .spec th {
+    background: var(--kn-plate-2);
+    color: var(--kn-plate-ink);
+    font-size: 12.5px;
+    border-bottom: 1px solid var(--kn-dk);
+  }
+  html.v2-skin-2024 .spec td { border-bottom-color: var(--line); }
+
+  /* ---------- 특별 아이템: 명령 카드 ---------- */
+  html.v2-skin-2024 .item {
+    background: linear-gradient(180deg, var(--sheet), var(--sheet-2));
+    border: 1px solid;
+    border-color: var(--kn-hi) var(--kn-lo) var(--kn-lo) var(--kn-hi);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px var(--kn-dk);
+  }
+  html.v2-skin-2024 .item:hover { border-color: var(--accent); }
+  html.v2-skin-2024 .item b { color: var(--ink); }
+  html.v2-skin-2024 .item[aria-pressed="true"] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 2px var(--kn-glow);
+  }
+  html.v2-skin-2024 .item[aria-pressed="true"] b { color: var(--ink); }
+  html.v2-skin-2024 .item .cnt button {
+    background: linear-gradient(180deg, var(--kn-plate), var(--kn-plate-2));
+    color: var(--ink);
+    border: 1px solid var(--kn-dk);
+    border-radius: 2px;
+    box-shadow: inset 1px 1px 0 var(--kn-hi);
+  }
+  html.v2-skin-2024 .item .cnt button:disabled { color: var(--ink-3); }
+
+  /* ---------- 탐사계획: 자원 계기판 ---------- */
+  html.v2-skin-2024 .energy div {
+    background: var(--kn-scr);
+    border: 1px solid var(--kn-scr-line);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px var(--kn-dk), inset 0 0 14px var(--kn-glow);
+  }
+  html.v2-skin-2024 .energy .label { color: var(--ink-3); }
+  html.v2-skin-2024 .energy b { color: var(--kn-scr-ink); letter-spacing: 0.02em; }
+  html.v2-skin-2024 .gauge {
+    background: var(--kn-scr);
+    border: 1px solid var(--kn-scr-line);
+    border-radius: 2px;
+  }
+  html.v2-skin-2024 .gauge .bar { background: var(--line); border-radius: 0; }
+  html.v2-skin-2024 .log li::marker { color: var(--volt); }
+
+  /* ---------- 표(성찰) ---------- */
+  html.v2-skin-2024 .rubric th { color: var(--ink-2); }
+  html.v2-skin-2024 .caution { border-radius: 2px; }
+  html.v2-skin-2024 .tag-mine,
+  html.v2-skin-2024 .tag-official { border-radius: 2px; }
+
+  /* ---------- 장면: 명판 + 관측 화면 + 자원 콘솔 ---------- */
+  html.v2-skin-2024 .v2-stage {
+    --kn-bar: 28px;
+    --kn-status: 40px;
+    height: clamp(250px, 36vh, 340px);
+    border-radius: 3px;
+    border: 3px solid;
+    border-color: var(--kn-hi) var(--kn-lo) var(--kn-lo) var(--kn-hi);
+    background: linear-gradient(180deg, var(--kn-plate), var(--kn-plate-2));
+    box-shadow: inset 0 0 0 1px var(--kn-dk), 0 4px 0 rgba(0, 0, 0, 0.2), 0 14px 26px -18px rgba(0, 0, 0, 0.8);
+  }
+  html.v2-skin-2024 .v2-stage[data-phase="room"],
+  html.v2-skin-2024 .v2-stage[data-phase="reflect"] { height: clamp(176px, 23vh, 214px); }
+  html.v2-skin-2024 .v2-stage-canvas {
+    top: var(--kn-bar);
+    left: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - var(--kn-bar) - var(--kn-status));
+  }
+  /* 관측 화면 테두리와 옅은 주사선 */
+  html.v2-skin-2024 .v2-stage::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: var(--kn-bar);
+    bottom: var(--kn-status);
+    background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 3px);
+    box-shadow: inset 0 0 0 1px var(--kn-dk), inset 0 0 0 2px var(--kn-lo), inset 0 0 22px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+  html.v2-skin-2024 .v2-stage-top {
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--kn-bar);
+    max-width: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  html.v2-skin-2024 .v2-stage-top::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 0 2px var(--kn-dk);
+  }
+  html.v2-skin-2024 .v2-stage-kicker { color: var(--kn-bar-kick); font-size: 11px; letter-spacing: 0.18em; }
+  html.v2-skin-2024 .v2-stage-title { color: var(--kn-bar-ink); font-size: 14px; overflow: hidden; text-overflow: ellipsis; }
+  html.v2-skin-2024 .v2-stage-hud {
+    left: 6px;
+    right: 6px;
+    bottom: 0;
+    min-height: var(--kn-status);
+    align-items: center;
+    gap: 6px;
+    padding: 5px 0;
+  }
+  html.v2-skin-2024 .v2-stage-chip {
+    gap: 6px;
+    padding: 2px 9px;
+    border-radius: 2px;
+    background: var(--kn-chip-bg);
+    color: var(--kn-chip-ink);
+    border: 1px solid var(--kn-scr-line);
+    box-shadow: inset 1px 1px 0 var(--kn-lo);
+    font-family: var(--mono);
+  }
+  html.v2-skin-2024 .v2-stage-chip b { color: var(--kn-chip-val); font-weight: 700; }
+  html.v2-skin-2024 .v2-stage-chip.tone-ok b { color: var(--ok); }
+  html.v2-skin-2024 .v2-stage-chip.tone-warn b { color: var(--warn); }
+  html.v2-skin-2024 .v2-stage-chip.tone-bad b { color: var(--bad); }
+  html.v2-skin-2024 .v2-stage-chip.tone-info b { color: var(--accent); }
+  html.v2-skin-2024 .v2-stage-broken .v2-stage-canvas { visibility: hidden; }
+}
+
+@media screen and (max-width: 760px) {
+  html.v2-skin-2024 .v2-stage { --kn-bar: 26px; --kn-status: 38px; height: 232px; }
+  html.v2-skin-2024 .v2-stage[data-phase="room"],
+  html.v2-skin-2024 .v2-stage[data-phase="reflect"] { height: 172px; }
+  html.v2-skin-2024 .v2-stage-hud { gap: 4px; }
+  html.v2-skin-2024 .v2-stage-chip { gap: 4px; padding-inline: 5px; }
+  html.v2-skin-2024 .v2-stage-kicker { font-size: 10px; letter-spacing: 0.12em; }
+}

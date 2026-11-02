@@ -1,0 +1,323 @@
+/* 2025 켄테시아 타임스 스킨: 1980년대 탐정 추리 게임의 수사 서류철 오마주
+ * 밝은 화면: 낮의 마닐라 서류철과 크림색 타자 용지. 어두운 화면: 탁상등 하나 켠 밤 사무실의 어두운 책상.
+ * 패널은 서류철(위쪽 색 띠 = 서류철 탭), 제목·번호는 타자기 글꼴, 연결 칸 왼쪽 선은 빨간 실, 입력 칸은 줄 공책.
+ * 모든 선택자는 html.v2-skin-2025 아래에 둔다. 띠(#strip)는 토큰(--ink, --paper)으로만 바뀐다.
+ * 격자·폭·표시·넘침·위치 같은 배치와 보고서 자료의 문구·순서는 바꾸지 않는다. */
+@media screen {
+  html.v2-skin-2025:root {
+    --paper: #e8dec6;
+    --sheet: #fbf7ec;
+    --sheet-2: #f3ead6;
+    --ink: #241d14;
+    --ink-2: #4c4030;
+    --ink-3: #66573f;
+    --line: #b5a27c;
+    --accent: #9b2119;
+    --accent-soft: #f4dcd3;
+    --accent-ink: #fffaf0;
+    --volt: #7d5300;
+    --volt-soft: #f1e2bd;
+    --ok: #2e6630;
+    --warn: #7a5200;
+    --bad: #a3271b;
+    --bad-soft: #f5d9d0;
+    --radius: 3px;
+    --shadow: 0 1px 0 rgba(36, 29, 20, 0.1), 3px 3px 0 rgba(181, 162, 124, 0.45);
+    --kt-news: #f6f1e4;
+    --kt-card: #fffaf0;
+    --kt-tab: #c9ad74;
+    --kt-tab-2: #b8955a;
+    --kt-rule: rgba(70, 105, 160, 0.16);
+    --kt-margin: rgba(155, 33, 25, 0.28);
+    --kt-sym-red: #b0243a;
+    --kt-sym-blue: #1b58a8;
+    --kt-sym-green: #0f6a35;
+    --kt-type: "IBM Plex Mono", "IBM Plex Sans KR", "Noto Sans KR", ui-monospace, monospace;
+    --kt-bg: radial-gradient(1200px 620px at 88% -10%, rgba(255, 246, 214, 0.75), transparent 62%),
+      repeating-linear-gradient(118deg, rgba(255, 250, 230, 0.16) 0 46px, transparent 46px 92px),
+      repeating-linear-gradient(0deg, rgba(120, 96, 52, 0.035) 0 1px, transparent 1px 3px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-2025:root:not([data-theme="light"]) {
+      --paper: #14100b;
+      --sheet: #221b13;
+      --sheet-2: #2a2218;
+      --ink: #efe5cc;
+      --ink-2: #d3c5a5;
+      --ink-3: #b4a481;
+      --line: #5d4c34;
+      --accent: #f08466;
+      --accent-soft: #3f2018;
+      --accent-ink: #1b0e08;
+      --volt: #e8b552;
+      --volt-soft: #382a12;
+      --ok: #9fd07e;
+      --warn: #e8b552;
+      --bad: #f39079;
+      --bad-soft: #3e1f19;
+      --radius: 3px;
+      --shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 3px 3px 0 rgba(0, 0, 0, 0.4);
+      --kt-news: #2a2319;
+      --kt-card: #2c2419;
+      --kt-tab: #6b5532;
+      --kt-tab-2: #84683b;
+      --kt-rule: rgba(160, 190, 230, 0.07);
+      --kt-margin: rgba(240, 132, 102, 0.22);
+      --kt-sym-red: #ff6f7d;
+      --kt-sym-blue: #78afff;
+      --kt-sym-green: #4fd38a;
+      --kt-bg: radial-gradient(900px 560px at 6% -6%, rgba(255, 196, 112, 0.17), rgba(255, 196, 112, 0.05) 45%, transparent 70%),
+        radial-gradient(1400px 900px at 50% 120%, rgba(0, 0, 0, 0.45), transparent 70%),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 140px),
+        repeating-linear-gradient(0deg, rgba(255, 230, 190, 0.018) 0 1px, transparent 1px 4px);
+      color-scheme: dark;
+    }
+  }
+  html.v2-skin-2025:root[data-theme="dark"] {
+    --paper: #14100b;
+    --sheet: #221b13;
+    --sheet-2: #2a2218;
+    --ink: #efe5cc;
+    --ink-2: #d3c5a5;
+    --ink-3: #b4a481;
+    --line: #5d4c34;
+    --accent: #f08466;
+    --accent-soft: #3f2018;
+    --accent-ink: #1b0e08;
+    --volt: #e8b552;
+    --volt-soft: #382a12;
+    --ok: #9fd07e;
+    --warn: #e8b552;
+    --bad: #f39079;
+    --bad-soft: #3e1f19;
+    --radius: 3px;
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 3px 3px 0 rgba(0, 0, 0, 0.4);
+    --kt-news: #2a2319;
+    --kt-card: #2c2419;
+    --kt-tab: #6b5532;
+    --kt-tab-2: #84683b;
+    --kt-rule: rgba(160, 190, 230, 0.07);
+    --kt-margin: rgba(240, 132, 102, 0.22);
+    --kt-sym-red: #ff6f7d;
+    --kt-sym-blue: #78afff;
+    --kt-sym-green: #4fd38a;
+    --kt-bg: radial-gradient(900px 560px at 6% -6%, rgba(255, 196, 112, 0.17), rgba(255, 196, 112, 0.05) 45%, transparent 70%),
+      radial-gradient(1400px 900px at 50% 120%, rgba(0, 0, 0, 0.45), transparent 70%),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 140px),
+      repeating-linear-gradient(0deg, rgba(255, 230, 190, 0.018) 0 1px, transparent 1px 4px);
+    color-scheme: dark;
+  }
+
+  /* ---------- 바탕: 낮 서류 책상(창 블라인드 빛) / 밤 사무실(탁상등) ---------- */
+  html.v2-skin-2025 body {
+    background-color: var(--paper);
+    background-image: var(--kt-bg);
+  }
+  html.v2-skin-2025 :focus-visible { outline-color: var(--accent); }
+  html.v2-skin-2025 .strip .ttl small { font-family: var(--kt-type); letter-spacing: 0.02em; }
+
+  /* ---------- 장면 틀: 코르크 게시판의 나무 테, 타자로 친 색인 카드, 마닐라 꼬리표 ---------- */
+  html.v2-skin-2025 .v2-stage {
+    border-radius: 3px;
+    background-color: #5a3d22;
+    box-shadow: 0 0 0 1px #2f1f10, 4px 5px 0 rgba(36, 24, 12, 0.28);
+  }
+  html.v2-skin-2025 .v2-stage-top {
+    padding: 4px 12px 5px 14px;
+    background-color: #f6efd9;
+    background-image: linear-gradient(90deg, #9b2119 0 3px, transparent 3px),
+      repeating-linear-gradient(180deg, transparent 0 17px, rgba(70, 105, 160, 0.18) 17px 18px);
+    border: 1px solid #3a2a17;
+    border-radius: 1px;
+    box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35);
+  }
+  html.v2-skin-2025 .v2-stage-kicker { color: #8e1f1a; font-family: var(--kt-type); }
+  html.v2-skin-2025 .v2-stage-title { color: #2a2116; font-family: var(--kt-type); letter-spacing: 0.01em; }
+  html.v2-skin-2025 .v2-stage-chip {
+    --kt-tone: #8a7656;
+    --kt-tone-ink: #3d3020;
+    background-color: #f3e6c4;
+    color: #5a4a33;
+    border: 1px solid #3a2a17;
+    border-left: 5px solid var(--kt-tone);
+    border-radius: 2px 9px 9px 2px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+    font-family: var(--kt-type);
+  }
+  html.v2-skin-2025 .v2-stage-chip b { color: var(--kt-tone-ink); font-weight: 700; }
+  html.v2-skin-2025 .v2-stage-chip.tone-ok { --kt-tone: #4d7a33; --kt-tone-ink: #2c5a1e; }
+  html.v2-skin-2025 .v2-stage-chip.tone-info { --kt-tone: #9b2119; --kt-tone-ink: #7a1a14; }
+  html.v2-skin-2025 .v2-stage-chip.tone-warn { --kt-tone: #b5832a; --kt-tone-ink: #5a3a00; }
+  html.v2-skin-2025 .v2-stage-chip.tone-muted { --kt-tone: #8a7656; --kt-tone-ink: #3d3020; }
+  html.v2-skin-2025 .v2-stage-broken .v2-stage-canvas { visibility: hidden; }
+
+  /* ---------- 사건 개요(타자 용지)와 문제(클립으로 집은 메모) ---------- */
+  html.v2-skin-2025 .brief .scenario {
+    padding: 14px 16px 14px 22px;
+    background-color: var(--sheet);
+    background-image: linear-gradient(90deg, transparent 12px, var(--kt-margin) 12px 13px, transparent 13px);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+  }
+  html.v2-skin-2025 .brief .scenario > .label {
+    font-family: var(--kt-type);
+    letter-spacing: 0.12em;
+    color: var(--accent);
+  }
+  html.v2-skin-2025 .brief .task {
+    padding: 12px 40px 12px 14px;
+    background-color: var(--volt-soft);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='46' viewBox='0 0 22 46'%3E%3Cpath d='M7 31V9a4 4 0 0 1 8 0v26a6 6 0 0 1-12 0V12' fill='none' stroke='%23927a52' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px top -2px;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 2px;
+    box-shadow: var(--shadow);
+  }
+  html.v2-skin-2025 .brief .task > b { font-family: var(--kt-type); color: var(--accent); letter-spacing: 0.06em; }
+
+  /* ---------- 패널: 마닐라 서류철(위쪽 탭 띠, 겹친 서류 그림자) ---------- */
+  html.v2-skin-2025 .panel {
+    background-color: var(--sheet);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--kt-tab);
+    border-radius: 2px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 3px 3px 0 var(--sheet-2), 4px 4px 0 var(--line);
+  }
+  html.v2-skin-2025 .panel .panel { box-shadow: none; border-top-width: 3px; }
+  html.v2-skin-2025 .panel > h3 {
+    font-family: var(--kt-type);
+    letter-spacing: 0.01em;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--line);
+  }
+  html.v2-skin-2025 .label { font-family: var(--kt-type); }
+  html.v2-skin-2025 .panel > h3 .chip:not(.ok):not(.warn):not(.bad) {
+    border-radius: 2px;
+    border-color: var(--accent);
+    color: var(--accent);
+    background: transparent;
+    font-family: var(--kt-type);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- 신문 탭(서류철 색인 탭)과 신문 지면(신문 용지) ---------- */
+  html.v2-skin-2025 .tabs { border-bottom-color: var(--kt-tab-2); }
+  html.v2-skin-2025 .tabs button {
+    color: var(--ink-2);
+    background: var(--sheet-2);
+    border: 1px solid var(--line);
+    border-bottom: 2px solid transparent;
+    border-radius: 4px 4px 0 0;
+    font-family: var(--kt-type);
+  }
+  html.v2-skin-2025 .tabs button[aria-selected="true"] {
+    color: var(--ink);
+    background: var(--sheet);
+    border-bottom-color: var(--accent);
+  }
+  html.v2-skin-2025 .sym-red { color: var(--kt-sym-red); }
+  html.v2-skin-2025 .sym-blue { color: var(--kt-sym-blue); }
+  html.v2-skin-2025 .sym-green { color: var(--kt-sym-green); }
+  html.v2-skin-2025 .paper {
+    background-color: var(--kt-news);
+    background-image: repeating-linear-gradient(0deg, rgba(120, 100, 60, 0.03) 0 1px, transparent 1px 3px);
+    border: 1px solid var(--line);
+    border-radius: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 4px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+  html.v2-skin-2025 .paper .by,
+  html.v2-skin-2025 .paper .cap { color: var(--ink-3); }
+
+  /* ---------- 단서 카드·신문 카드(색인 카드)와 순서 칸(게시판 자리) ---------- */
+  html.v2-skin-2025 .tray button,
+  html.v2-skin-2025 .slot .pp {
+    background-color: var(--kt-card);
+    background-image: linear-gradient(180deg, transparent 0 5px, var(--kt-margin) 5px 6px, transparent 6px);
+    border: 1px solid var(--line);
+    border-radius: 1px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  }
+  html.v2-skin-2025 .tray button:hover { border-color: var(--accent); }
+  html.v2-skin-2025 .tray button[aria-pressed="true"] {
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
+    box-shadow: 0 0 0 1px var(--accent), 3px 3px 0 rgba(0, 0, 0, 0.14);
+  }
+  html.v2-skin-2025 .slot {
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    background-color: var(--sheet-2);
+  }
+  html.v2-skin-2025 .slot.filled {
+    border-style: solid;
+    border-left: 3px solid var(--accent);
+    background-color: var(--sheet);
+  }
+  html.v2-skin-2025 .slot .n { font-family: var(--kt-type); font-weight: 600; color: var(--accent); }
+  html.v2-skin-2025 .link { border-left-color: var(--accent); }
+  html.v2-skin-2025 .field > label { font-family: var(--kt-type); }
+
+  /* ---------- 입력 칸: 줄 공책 ---------- */
+  html.v2-skin-2025 textarea.note,
+  html.v2-skin-2025 input.note {
+    background-color: var(--kt-card);
+    border: 1px solid var(--line);
+    border-radius: 1px;
+  }
+  html.v2-skin-2025 textarea.note {
+    background-image: repeating-linear-gradient(180deg, transparent 0 calc(1.55em - 1px), var(--kt-rule) calc(1.55em - 1px) 1.55em);
+    background-position: 0 8px;
+    background-attachment: local;
+  }
+  html.v2-skin-2025 textarea.note:focus,
+  html.v2-skin-2025 input.note:focus { border-color: var(--accent); }
+
+  /* ---------- 버튼: 고무 도장 ---------- */
+  html.v2-skin-2025 .btn {
+    border-radius: 2px;
+    font-family: var(--kt-type);
+    background-color: var(--sheet);
+    border-color: var(--line);
+  }
+  html.v2-skin-2025 .btn:hover { border-color: var(--accent); }
+  html.v2-skin-2025 .btn.primary {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: inset 0 0 0 2px var(--accent), inset 0 0 0 3px var(--accent-ink);
+    letter-spacing: 0.03em;
+  }
+  html.v2-skin-2025 .btn.ghost { background-color: transparent; }
+
+  /* ---------- 면접실·성찰: 질문 카드(색인 카드), 표, 펼침 서류 ---------- */
+  html.v2-skin-2025 .qcard {
+    background-color: var(--kt-card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    border-radius: 1px;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  html.v2-skin-2025 .qcard .who { font-family: var(--kt-type); }
+  html.v2-skin-2025 details.reveal {
+    background-color: var(--sheet);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--kt-tab);
+    border-radius: 2px;
+  }
+  html.v2-skin-2025 .rubric th,
+  html.v2-skin-2025 .scoretable th { font-family: var(--kt-type); }
+  html.v2-skin-2025 .seg { border-radius: 2px; }
+  html.v2-skin-2025 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  html.v2-skin-2025 .tag-mine,
+  html.v2-skin-2025 .tag-official { border-radius: 1px; }
+}
+
+@media screen and (max-width: 760px) {
+  html.v2-skin-2025 .v2-stage-top { padding: 3px 10px 3px 12px; }
+  html.v2-skin-2025 .v2-stage-kicker { display: none; }
+  html.v2-skin-2025 .v2-stage-title { font-size: 13.5px; }
+}

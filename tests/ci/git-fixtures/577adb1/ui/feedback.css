@@ -1,0 +1,170 @@
+#kcp-feedback .v2-modal-body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#kcp-feedback fieldset {
+  min-width: 0;
+  margin: 16px 0;
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+}
+
+#kcp-feedback legend,
+#kcp-feedback label {
+  color: var(--ui-text);
+}
+
+#kcp-feedback legend {
+  max-width: 100%;
+  padding: 0 4px;
+}
+
+#kcp-feedback .fb-options,
+#kcp-feedback .fb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+#kcp-feedback .fb-options label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#kcp-feedback input[type="radio"] {
+  flex: none;
+  margin: 0;
+  accent-color: var(--ui-cyan);
+}
+
+#kcp-feedback .fb-field {
+  margin: 16px 0;
+}
+
+#kcp-feedback textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: #102338;
+  color: var(--ui-text);
+  caret-color: var(--ui-cyan);
+  font: inherit;
+  /* iOS Safari는 16px 미만 입력칸에 초점이 가면 화면을 확대한다. */
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+#kcp-feedback button {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+}
+
+#kcp-feedback :is(button, textarea, input):focus-visible,
+#kcp-feedback .fb-options label:focus-within {
+  outline: 2px solid var(--ui-cyan);
+  outline-offset: 2px;
+}
+
+#kcp-feedback #fb-warn,
+#kcp-feedback #fb-pii-title {
+  color: var(--ui-gold);
+  font-weight: 700;
+}
+
+#kcp-feedback #fb-pii {
+  margin-top: 16px;
+  padding: 12px;
+  border: 1px solid var(--ui-danger);
+  border-radius: 10px;
+}
+
+#kcp-feedback .fb-actions {
+  margin-top: 16px;
+}
+
+#kcp-feedback #fb-clear {
+  margin-left: auto;
+}
+
+#kcp-feedback #fb-status {
+  color: var(--ui-text);
+}
+
+#lg-sheet {
+  min-width: 0;
+  color: var(--ui-text);
+  overflow-wrap: anywhere;
+  /* 끝 화면은 아래에 지난달 예측 판정 상자가 붙는다. 보내는 값으로 읽히지 않게 구분선을 둔다. */
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+#lg-sheet dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+#lg-sheet dl > div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-panel);
+}
+
+#lg-sheet dt {
+  color: var(--ui-muted);
+}
+
+#lg-sheet dd {
+  margin: 4px 0 0;
+  color: var(--ui-text);
+}
+
+#lg-sheet button {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#lg-sheet button:focus-visible {
+  outline: 2px solid var(--ui-cyan);
+  outline-offset: 2px;
+}
+
+#lg-sheet button[aria-disabled="true"] {
+  cursor: default;
+}
+
+#lg-sheet #lg-sheet-status {
+  color: var(--ui-text);
+}
+
+@media (max-width: 600px) {
+  #lg-sheet dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

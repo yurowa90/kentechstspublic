@@ -1,0 +1,380 @@
+.ig-root {
+  color: var(--ink);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ig-root *,
+.ig-reflect * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.ig-root .panel,
+.ig-reflect {
+  color: var(--ink);
+}
+.ig-root .muted,
+.ig-root .hint,
+.ig-root .label,
+.ig-brief .label,
+.ig-reflect .muted {
+  color: var(--ink-2);
+}
+.ig-root .tag-mine,
+.ig-reflect .tag-mine {
+  color: var(--ink-2);
+  border-color: var(--volt);
+  white-space: normal;
+}
+.ig-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.ig-root p,
+.ig-reflect p {
+  overflow-wrap: anywhere;
+}
+.ig-root select,
+.ig-root input[type="number"] {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 6px 0 12px;
+  padding: 7px 10px;
+  border: 1px solid var(--ink-2);
+  border-radius: 4px;
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+}
+.ig-root label {
+  display: block;
+}
+.ig-root input::placeholder,
+.ig-root textarea::placeholder {
+  color: var(--ink-2);
+  opacity: 1;
+}
+.ig-root .caution {
+  color: var(--ink);
+  background: var(--sheet-2);
+}
+.ig-root button,
+.ig-root summary,
+.ig-reflect summary {
+  min-height: 44px;
+  white-space: normal;
+}
+.ig-root button:focus-visible,
+.ig-root select:focus-visible,
+.ig-root input:focus-visible,
+.ig-root textarea:focus-visible,
+.ig-root summary:focus-visible,
+.ig-root [role="slider"]:focus-visible,
+.ig-reflect summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.ig-tabs {
+  gap: 2px;
+}
+.ig-tabs button {
+  flex: 1 1 80px;
+  padding: 8px 4px;
+}
+.ig-card {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ink-2);
+}
+.ig-card h4,
+.ig-card h5 {
+  margin: 0 0 6px;
+}
+.ig-card p {
+  margin: 6px 0;
+}
+.ig-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 10px 0 16px;
+  font-size: 13px;
+  color: var(--ink);
+}
+.ig-table caption {
+  color: var(--ink-2);
+  text-align: left;
+  padding-bottom: 6px;
+}
+.ig-table th,
+.ig-table td {
+  padding: 7px 5px;
+  border-bottom: 1px solid var(--ink-2);
+  vertical-align: top;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.ig-table th {
+  color: var(--ink);
+  font-weight: 600;
+}
+.ig-chart svg,
+.ig-bat-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.ig-chart {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.ig-chart svg text {
+  fill: var(--ink-2);
+}
+.ig-chart .legend {
+  flex-wrap: wrap;
+  color: var(--ink-2);
+}
+.ig-timeline h4 {
+  margin: 14px 0 6px;
+}
+.ig-control-row {
+  border: 2px solid var(--ink-2);
+  border-radius: 4px;
+  padding: 3px;
+  background: var(--sheet);
+  touch-action: pan-y;
+}
+.ig-control-row.ig-active-row {
+  border-color: var(--ink);
+}
+.ig-cells,
+.ig-hours {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 2px;
+}
+.ig-hours {
+  position: relative;
+  padding: 0 5px;
+  margin: 20px 0 22px;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+.ig-end-hour {
+  position: absolute;
+  right: 5px;
+  top: 18px;
+}
+.ig-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  min-height: 54px;
+  border: 2px solid var(--sheet-2);
+  background: var(--sheet-2);
+  color: var(--ink);
+  padding: 5px 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.ig-cell.ig-selected {
+  border: 2px solid var(--ink);
+}
+.ig-marker {
+  display: block;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.ig-pending .ig-marker {
+  font-weight: 700;
+}
+.ig-bat-svg {
+  touch-action: pan-y;
+  cursor: crosshair;
+}
+.ig-control-row[aria-disabled="true"] .ig-cell,
+.ig-control-row[aria-disabled="true"] .ig-bat-svg {
+  cursor: default;
+}
+.ig-active {
+  padding: 10px;
+  background: var(--sheet-2);
+  color: var(--ink);
+  font-weight: 600;
+}
+.ig-step-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.ig-step {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 3px;
+}
+.ig-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  border: 0;
+}
+.ig-options button {
+  flex: 1 1 130px;
+  padding: 9px;
+  border: 1px solid var(--ink-2);
+  border-radius: 4px;
+  color: var(--ink);
+}
+.ig-options button[aria-pressed="true"] {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+.ig-pred-options {
+  display: grid;
+  gap: 6px;
+}
+.ig-pred-options label {
+  min-height: 44px;
+  padding: 9px 5px;
+  background: var(--sheet-2);
+}
+.ig-warning {
+  padding: 12px;
+  border: 2px solid var(--ink-2);
+  background: var(--sheet-2);
+  color: var(--ink);
+}
+.ig-metric {
+  margin: 12px 0;
+  padding: 12px;
+  background: var(--sheet-2);
+  border: 1px solid var(--ink-2);
+  border-radius: 4px;
+}
+.ig-metric h4 {
+  margin: 0 0 8px;
+}
+.ig-metric dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0 0;
+}
+.ig-metric dt {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.ig-metric dd {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.ig-cut-line {
+  display: block;
+  margin-top: 6px;
+  font-size: 14px;
+}
+.ig-details {
+  padding: 10px;
+  border: 1px solid var(--ink-2);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--sheet);
+}
+.ig-details summary,
+.ig-reflect summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.ig-list {
+  margin: 8px 0;
+}
+.ig-list > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--ink-2);
+}
+.ig-list dt {
+  color: var(--ink-2);
+}
+.ig-list dd {
+  margin: 0;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.ig-time-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.ig-time-card {
+  background: var(--sheet-2);
+  padding: 10px;
+}
+.ig-time-card h5 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.ig-history-entry {
+  padding: 8px 0;
+  border-top: 1px solid var(--ink-2);
+}
+.ig-pre {
+  white-space: pre-wrap;
+}
+.ig-one-line {
+  margin-top: 8px;
+  min-height: 110px;
+}
+.ig-final label {
+  margin-top: 14px;
+}
+.ig-reflect {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 980px) {
+  .ig-context {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ig-metric dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ig-metric dl > div {
+    border-top: 1px solid var(--ink-2);
+    padding-top: 8px;
+  }
+}
+@media (max-width: 600px) {
+  .ig-root .panel {
+    padding-inline: 8px;
+  }
+  .ig-time-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ig-metric,
+  .ig-details {
+    padding: 8px;
+  }
+  .ig-list > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ig-root *,
+  .ig-reflect * {
+    animation: none;
+    transition: none;
+    scroll-behavior: auto;
+  }
+}

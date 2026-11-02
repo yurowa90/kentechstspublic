@@ -1,0 +1,5 @@
+# 맥 로컬 tests/.venv(Python 3.14.7)와 같은 판. playwright의 의존 패키지도 고정해 CI와 로컬이 같은 조합을 쓴다.
+playwright==1.63.0
+greenlet==3.5.6
+pyee==13.0.1
+typing_extensions==4.16.0

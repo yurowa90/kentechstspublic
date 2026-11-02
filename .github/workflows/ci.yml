@@ -1,0 +1,221 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: "1"
+  KCP_MAX_LOAD: "0"
+  # 공유 실행기는 맥 로컬보다 느려 검사 도우미의 대기 상한(판정 기준 아님)만 2.5배로 둔다. 맥 로컬 기본은 12초·5초.
+  KCP_WAIT: "30000"
+  KCP_UI_WAIT: "12500"
+
+jobs:
+  syntax:
+    name: 문법 검사
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v5
+      - name: 노드 준비
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24.21.0"
+      - name: 자바스크립트 문법 확인
+        run: |
+          fail=0
+          for f in *.js ext/*.js games/*.js ui/*.js; do
+            if ! node --check "$f"; then
+              printf '문법 실패: %s\n' "$f"
+              fail=1
+            fi
+          done
+          exit "$fail"
+      - name: Node 검사 목록과 파일 대조
+        # 목록(tests/ci/node-suites.txt)과 파일이 어긋나면 노드 작업 판정에서도 실패하지만, 여기서 먼저 알린다.
+        if: always()
+        run: bash tests/ci/node-all.sh --check
+
+  plan:
+    name: 브라우저 검사 목록 확인
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.shards.outputs.shards }}
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v5
+      - name: 샤드 목록 만들기
+        # 매트릭스를 suites.txt의 샤드 번호에서 만든다. 번호를 잘못 적은 검사가 어느 샤드에서도 돌지 않고
+        # 빠지는 일을 막는다. 칸 형식·중복·기준 수치 누락은 browser.sh가 확인하고 종료 코드 2로 멈춘다.
+        id: shards
+        run: |
+          shards=$(bash tests/ci/browser.sh --shards)
+          printf '브라우저 샤드: %s\n' "$shards"
+          echo "shards=$shards" >> "$GITHUB_OUTPUT"
+
+  node:
+    name: 노드 검사 (${{ matrix.part }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        part: [heavy, rest]
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v5
+        with:
+          # 여러 검사가 git show로 옛 커밋을 읽는다. 공개 사본에는 옛 이력이 없어 tests/ci/git-fixtures의 사본을 쓴다.
+          fetch-depth: 0
+      - name: 노드 준비
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24.21.0"
+      - name: 옛 커밋 파일 대리 준비
+        # 공개 사본 전용: git show <옛 커밋>:<파일>을 tests/ci/git-fixtures에서 내준다. 나머지 git 호출은 그대로 넘긴다.
+        run: echo "$GITHUB_WORKSPACE/tests/ci/git-shim" >> "$GITHUB_PATH"
+      - name: 노드 검사 실행
+        # 실행 권한 비트에 기대지 않도록 bash로 부른다. 작업 시간 제한보다 먼저 끊어 판정·보관 단계가 돌 시간을 남긴다.
+        timeout-minutes: 130
+        run: bash tests/ci/node-all.sh --part ${{ matrix.part }} --out tests/results/ci/node
+      - name: 노드 결과 판정
+        # 실행 단계가 실패하거나 시간 제한에 걸려도 돈다. 실행기 오류와 돌지 못한 검사를 요약에 남긴다.
+        if: always()
+        run: python3 tests/ci/judge.py --kind node --logs tests/results/ci/node --title "node 검사 판정(${{ matrix.part }})"
+      - name: 노드 결과 보관
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-${{ matrix.part }}
+          path: tests/results/ci/node
+          if-no-files-found: warn
+          retention-days: 14
+
+  browser:
+    name: 브라우저 검사 (샤드 ${{ matrix.shard }})
+    needs: plan
+    # 화면 측정 검사(넘침·높이·가림·글자 폭)의 기준판은 맥 로컬이다. 검사는 Google Fonts CSS를 빈 응답으로 막으므로
+    # 글자는 운영체제의 대체 글꼴로 그려진다. 맥은 Apple SD Gothic Neo, 리눅스는 Liberation Sans + Noto Sans CJK라
+    # 한글 폭(약 16%)과 기본 줄 높이(약 20%)가 달라 화면 측정 검사 8종이 리눅스에서만 실패했다. 애플 글꼴은
+    # 리눅스에 재배포할 수 없으므로 브라우저 작업만 macOS 실행기에서 돌린다. 공개 저장소의 표준 실행기라 과금은 없다.
+    # 저장소를 비공개로 바꾸면 macOS 분은 리눅스의 10배로 과금되므로 그때는 이 줄부터 다시 정한다.
+    runs-on: macos-15
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v5
+      - name: 노드 준비
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24.21.0"
+      - name: 파이썬 준비
+        uses: actions/setup-python@v6
+        with:
+          # 맥 로컬 tests/.venv와 같은 3.14 계열. 끝자리 판은 실행기 이미지가 고른다(로컬은 3.14.7).
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: tests/ci/requirements.txt
+      - name: 검사 도구 설치
+        run: pip install -r tests/ci/requirements.txt
+      - name: 한글 글꼴 설치
+        # 리눅스 실행기로 되돌릴 때만 돈다. macOS는 기본 한글·이모지 글꼴이 있다.
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk fonts-noto-color-emoji
+          fc-cache -f
+      - name: 필요한 브라우저 확인
+        id: browsers
+        run: |
+          selected=$(bash tests/ci/browser.sh --shard ${{ matrix.shard }} --list)
+          if printf '%s\n' "$selected" | grep -qx webkit; then
+            echo 'browsers=chromium webkit' >> "$GITHUB_OUTPUT"
+          else
+            echo 'browsers=chromium' >> "$GITHUB_OUTPUT"
+          fi
+      - name: 브라우저 설치
+        # 운영체제 패키지 설치(--with-deps)는 리눅스에서만 필요하다.
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            python -m playwright install --with-deps ${{ steps.browsers.outputs.browsers }}
+          else
+            python -m playwright install ${{ steps.browsers.outputs.browsers }}
+          fi
+      - name: 브라우저 검사 실행
+        # 작업 시간 제한보다 먼저 끊어 판정·보관 단계가 돌 시간을 남긴다.
+        timeout-minutes: 70
+        run: PY=python bash tests/ci/browser.sh --port 8000 --shard ${{ matrix.shard }} --out tests/results/ci/browser
+      - name: 브라우저 결과 판정
+        # 서버 기동 실패·파이썬 없음·포트 충돌·시간 제한으로 실행 단계가 멈춰도 돈다.
+        if: always()
+        run: python tests/ci/judge.py --kind browser --logs tests/results/ci/browser --advisory tests/ci/ci-advisory.txt --title "browser 검사 판정(샤드 ${{ matrix.shard }})"
+      - name: 브라우저 로그 보관
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-shard-${{ matrix.shard }}
+          path: tests/results/ci/browser
+          if-no-files-found: warn
+          retention-days: 14
+      - name: 실패 때 화면 캡처 보관
+        # 캡처까지 늘 올리면 샤드마다 수십 MB가 쌓이므로 실패한 샤드만 올린다.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-shard-${{ matrix.shard }}-files
+          path: |
+            tests/results/
+            !tests/results/ci/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  gate:
+    name: 최종 판정
+    needs: [syntax, plan, node, browser]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 전체 결과 확인
+        env:
+          SYNTAX_RESULT: ${{ needs.syntax.result }}
+          PLAN_RESULT: ${{ needs.plan.result }}
+          NODE_RESULT: ${{ needs.node.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          fail=0
+          for entry in "문법:$SYNTAX_RESULT" "브라우저 목록:$PLAN_RESULT" "노드:$NODE_RESULT" "브라우저:$BROWSER_RESULT"; do
+            label=${entry%%:*}
+            result=${entry#*:}
+            case "$result" in
+              success) text=통과 ;;
+              failure) text=실패 ;;
+              cancelled) text=취소 ;;
+              skipped) text=건너뜀 ;;
+              *) text=알수없음 ;;
+            esac
+            printf '%s: %s\n\n' "$label" "$text" >> "$GITHUB_STEP_SUMMARY"
+            [ "$result" = success ] || fail=1
+          done
+          exit "$fail"

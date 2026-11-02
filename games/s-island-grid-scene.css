@@ -1,0 +1,580 @@
+/* 섬 전력망 24시: 3D 섬 장면(화면 시안 v2)의 배치
+ * html.v2-scene  섬 게임 화면 전체
+ * html.v2-prep   준비실: 섬이 화면 전체, 상태·메뉴·패널이 위에 뜬다
+ * html.v2-doc    면접실·성찰: 흐린 섬 위에 문서 패널 하나
+ * 게임 띠(#strip)는 id와 sticky를 유지한 채 떠 있는 상태 막대로 보이게 한다. */
+
+html.v2-scene #app { max-width: none; padding: 0; }
+
+/* ---------- 게임 띠 ---------- */
+html.v2-scene .strip {
+  top: 12px;
+  z-index: 40;
+  width: fit-content;
+  max-width: calc(100vw - 24px);
+  margin: 12px 12px 0;
+  gap: 8px 14px;
+  padding: 8px 12px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  background: var(--ui-hud);
+  color: var(--ui-text);
+  box-shadow: var(--ui-shadow);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+}
+html.v2-scene .strip a { color: var(--ui-text); opacity: 0.9; }
+html.v2-scene .strip .ttl {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  font-size: 20px;
+  color: var(--ui-text);
+}
+html.v2-scene .strip .ttl::before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 9px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath d='M15 4l9 5.2v10.4L15 25l-9-5.4V9.2z' fill='%23359e8d' stroke='%23bc805e' stroke-width='2'/%3E%3Cpath d='M15 10.5l3.4 2v4L15 18.5l-3.4-2v-4z' fill='%2324364f'/%3E%3Cpath d='M20.5 7.5v-4M19 3.5h3' stroke='%23edf4fc' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E") center / 30px no-repeat,
+    rgba(6, 18, 32, 0.7);
+}
+html.v2-scene .strip .ttl small { margin-left: 0; color: var(--ui-muted); opacity: 1; }
+html.v2-scene .igs-strip-q {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ui-gold);
+  white-space: nowrap;
+}
+html.v2-scene .igs-strip-info {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--ui-border);
+  border-radius: 9px;
+  background: rgba(6, 18, 32, 0.6);
+  color: var(--ui-text);
+  cursor: pointer;
+}
+html.v2-scene .strip .phases { background: rgba(6, 18, 32, 0.6); border-radius: 10px; padding: 3px; }
+html.v2-scene .strip .phases button { color: var(--ui-text); opacity: 0.85; border-radius: 8px; }
+html.v2-scene .strip .phases button[aria-pressed="true"] { background: var(--ui-cyan); color: #06202a; opacity: 1; }
+html.v2-scene .strip .timer button { color: var(--ui-text); border-color: var(--ui-border); border-radius: 8px; background: rgba(6, 18, 32, 0.5); }
+html.v2-scene .strip .timer .clock { color: var(--ui-text); }
+html.v2-scene .strip .progress { background: var(--ui-gold); }
+
+/* 시간 설정은 상태 막대 아래에 뜨는 작은 창 */
+html.v2-scene #timeset {
+  position: fixed;
+  top: var(--v2-top, 140px);
+  left: 12px;
+  z-index: 60;
+  width: min(440px, calc(100vw - 24px));
+  max-height: calc(100dvh - var(--v2-top, 140px) - 16px);
+  margin: 0;
+  overflow: auto;
+  border-color: var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-panel);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- 섬 무대 ---------- */
+.igs-stage { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: #6bb1d2; }
+.igs-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+.igs-canvas.dragging { cursor: grabbing; }
+.igs-canvas.hovering { cursor: pointer; }
+.igs-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(4, 12, 24, 0.42) 100%);
+}
+.igs-banners { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.igs-banner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 3px 10px 3px 3px;
+  border: 1px solid rgba(150, 190, 215, 0.35);
+  border-radius: 999px;
+  background: rgba(10, 25, 42, 0.92);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+  pointer-events: auto;
+  cursor: pointer;
+  will-change: transform;
+}
+.igs-banner::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 2px;
+  height: 7px;
+  margin-left: -1px;
+  background: rgba(237, 244, 252, 0.7);
+}
+.igs-banner:hover { border-color: var(--ui-cyan); }
+.igs-banner[aria-pressed="true"] { border-color: var(--ui-gold); box-shadow: 0 0 0 2px rgba(236, 208, 131, 0.35), 0 8px 18px rgba(0, 0, 0, 0.28); }
+.igs-bn-code {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--bn, #71dceb);
+  color: #06202a;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+}
+.igs-bn-val { font-family: var(--mono); color: #c3d2df; font-weight: 500; }
+.igs-bn-cut { font-family: var(--mono); color: #ffb3c4; }
+.igs-bn-flag { color: var(--ui-gold); }
+.igs-marker { padding: 3px; min-height: 0; }
+.igs-marker .igs-bn-code { width: 30px; height: 30px; min-width: 0; padding: 0; }
+.igs-marker .igs-bn-code .v2-ico { width: 18px; height: 18px; }
+.igs-banners[data-off="true"] .igs-banner { display: none; }
+
+/* ---------- 상태 캡슐과 배지 ---------- */
+.igs-hud {
+  position: fixed;
+  top: var(--igs-hud-top, 84px);
+  left: 12px;
+  z-index: 30;
+  max-width: calc(100vw - 24px);
+}
+.igs-hud .igs-more { display: none; }
+.igs-hud .igs-cap-state { display: none; }
+.igs-badge {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 6px 14px;
+  border: 1px solid rgba(236, 208, 131, 0.55);
+  border-radius: 12px;
+  background: var(--ui-hud);
+  color: var(--ui-gold);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--ui-shadow);
+}
+.igs-badge .v2-ico { width: 16px; height: 16px; }
+.igs-scen[hidden] { display: none; }
+
+/* ---------- 도구 막대와 패널 ---------- */
+.igs-tools {
+  position: fixed;
+  top: 50%;
+  right: 12px;
+  z-index: 35;
+  transform: translateY(-50%);
+}
+.igs-root .v2-panel {
+  position: fixed;
+  top: var(--v2-top, 140px);
+  right: 96px;
+  z-index: 25;
+  width: min(440px, calc(100vw - 120px));
+  max-height: calc(100dvh - var(--v2-top, 140px) - 16px);
+}
+#v2-plan { bottom: 16px; }
+#igs-status { width: min(380px, calc(100vw - 120px)); }
+#igs-settings { width: min(470px, calc(100vw - 120px)); }
+.igs-root .v2-panel-body { flex: 1; overflow: auto; overscroll-behavior: contain; }
+html.v2-prep #v2-plan-body { container-type: inline-size; container-name: igs-plan; padding: 12px; }
+html.v2-prep #v2-plan-body * { scroll-margin-top: 10px !important; }
+@container igs-plan (max-width: 980px) {
+  .ig-context { grid-template-columns: minmax(0, 1fr); }
+  .ig-metric dl { grid-template-columns: minmax(0, 1fr); }
+  .ig-metric dl > div { border-top: 1px solid var(--ink-2); padding-top: 8px; }
+}
+@container igs-plan (max-width: 600px) {
+  .ig-root .panel { padding-inline: 8px; }
+  .ig-time-cards { grid-template-columns: minmax(0, 1fr); }
+  .ig-metric, .ig-details { padding: 8px; }
+  .ig-list > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+.igs-status-list { margin: 0; display: grid; gap: 8px; }
+.igs-status-list > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 10px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.igs-status-list dt { color: var(--ui-text); font-weight: 600; }
+.igs-status-list dd { margin: 0; font-family: var(--mono); color: var(--ui-text); text-align: right; }
+.igs-status-list .sub { grid-column: 1 / -1; color: var(--ui-muted); font-family: inherit; font-size: 12.5px; text-align: left; }
+.igs-status h3 { margin: 14px 0 8px; font-size: 13px; letter-spacing: 0.08em; color: var(--ui-cyan); }
+.igs-status h3:first-child { margin-top: 0; }
+.igs-pick-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.igs-pick-list .v2-btn { justify-content: flex-start; font-weight: 600; }
+.igs-set-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.igs-set-counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 10px 0; }
+.igs-set-counts > div { padding: 8px 10px; border: 1px solid var(--ui-border); border-radius: 10px; background: rgba(255, 255, 255, 0.03); }
+.igs-set-counts dt { color: var(--ui-muted); font-size: 12px; }
+.igs-set-counts dd { margin: 2px 0 0; font-family: var(--mono); font-weight: 600; }
+.igs-set-mission { padding: 10px 12px; border: 1px solid rgba(236, 208, 131, 0.4); border-radius: 12px; background: rgba(236, 208, 131, 0.08); }
+.igs-set-mission p + p { margin-top: 2px; font-weight: 700; color: var(--ui-text); }
+.igs-set-guide { margin-top: 10px; color: var(--ui-muted); font-size: 13.5px; }
+#igs-settings .tm-tip { margin: 10px 0 0; }
+
+/* ---------- 단계 카드: 패널이 닫혀 있을 때 오른쪽 위, 계획 패널 안에는 짧은 막대 ---------- */
+.igs-qbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--ui-border);
+  background: rgba(236, 208, 131, 0.07);
+}
+.igs-qbar-t { flex: 1; min-width: 0; }
+.igs-qbar-title { font-weight: 700; color: var(--ui-text); font-size: 14px; }
+.igs-qbar .v2-btn { min-height: 40px; padding: 6px 12px; font-size: 13px; }
+html.v2-doc .igs-qbar { display: none; }
+.igs-root:not([data-panel="none"]) .igs-quest { display: none; }
+.igs-quest {
+  position: fixed;
+  top: var(--v2-top, 140px);
+  right: 96px;
+  z-index: 20;
+  width: min(340px, calc(100vw - 120px));
+  padding: 12px 14px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-panel);
+  box-shadow: var(--ui-shadow);
+  color: var(--ui-text);
+}
+.igs-quest-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.igs-q-fold {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ui-muted);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.igs-q-title { margin: 6px 0 4px; font-size: 17px; font-weight: 700; color: var(--ui-text); }
+.igs-q-text { color: var(--ui-muted); font-size: 13.5px; }
+.igs-q-next { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--ui-muted); }
+.igs-q-bar { display: flex; gap: 4px; margin-top: 10px; }
+.igs-q-bar span { flex: 1; height: 5px; border-radius: 9px; background: rgba(150, 190, 215, 0.22); }
+.igs-q-bar span.done { background: var(--ui-mint); }
+.igs-q-bar span.now { background: var(--ui-gold); }
+.igs-q-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.igs-q-actions .v2-btn { min-height: 40px; padding: 6px 12px; font-size: 13px; }
+.igs-quest[data-folded="true"] .igs-q-body,
+.igs-root[data-sel="true"] .igs-q-body { display: none; }
+.igs-lock-note { font-size: 12.5px; font-weight: 600; color: var(--ui-text); }
+
+/* ---------- 아래 왼쪽: 선택 카드, 시점, 시간 막대 ---------- */
+.igs-dock {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 22;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: calc(100vw - var(--igs-reserve, 560px));
+}
+.igs-select {
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(46vh, 420px);
+  overflow: auto;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  background: var(--ui-panel);
+  box-shadow: var(--ui-shadow);
+  color: var(--ui-text);
+}
+.igs-select-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.igs-select-title { margin-top: 2px; font-size: 18px; font-weight: 700; color: var(--ui-text); }
+.igs-select-desc { margin-top: 6px; color: var(--ui-muted); font-size: 13.5px; }
+.igs-select-stats { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; margin: 10px 0 0; font-size: 13.5px; }
+.igs-select-stats dt { color: var(--ui-muted); }
+.igs-select-stats dd { margin: 0; font-family: var(--mono); color: var(--ui-text); text-align: right; }
+.igs-select-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.igs-select-note { margin-top: 8px; font-size: 12.5px; color: var(--ui-muted); }
+.igs-camrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.igs-timeline {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  background: var(--ui-panel);
+  box-shadow: var(--ui-shadow);
+}
+.igs-segs { display: flex; gap: 4px; min-width: 0; }
+.igs-seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 34px;
+  width: 52px;
+  min-height: 52px;
+  padding: 4px 2px 7px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ui-muted);
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.igs-seg .v2-ico { width: 16px; height: 16px; }
+.igs-seg:hover { color: var(--ui-text); border-color: var(--ui-border); }
+.igs-seg[aria-pressed="true"] { border-color: var(--ui-gold); background: rgba(236, 208, 131, 0.14); color: var(--ui-text); }
+.igs-seg-bar { position: absolute; left: 8px; right: 8px; bottom: 3px; height: 3px; border-radius: 9px; background: rgba(123, 227, 180, 0.6); }
+.igs-seg[data-short="true"] .igs-seg-bar { background: var(--ui-danger); }
+.igs-seg[data-pending="true"] .igs-seg-bar { background: repeating-linear-gradient(90deg, var(--ui-gold) 0 4px, transparent 4px 7px); }
+.igs-next {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 100px;
+  min-height: 52px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--ui-cyan), var(--ui-blue));
+  color: #06202a;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: 0 10px 22px -10px rgba(113, 220, 235, 0.9);
+}
+.igs-next small { font-family: var(--mono); font-size: 11.5px; font-weight: 600; opacity: 0.85; }
+.igs-prev, .igs-mtime { display: none; }
+
+/* ---------- 면접실·성찰: 흐린 섬 위 문서 패널 ---------- */
+html.v2-doc .igs-hud,
+html.v2-doc .igs-badge,
+html.v2-doc .igs-tools,
+html.v2-doc .igs-quest,
+html.v2-doc .igs-dock,
+html.v2-doc #igs-status,
+html.v2-doc #igs-settings,
+html.v2-doc .igs-banners { display: none !important; }
+html.v2-doc .igs-stage { filter: saturate(0.85) brightness(0.5) blur(5px); transform: scale(1.03); }
+html.v2-doc .igs-root #v2-plan {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  z-index: 5;
+  width: min(1060px, calc(100vw - 24px));
+  max-height: none;
+  margin: 16px auto 48px;
+  display: flex !important;
+}
+html.v2-doc #v2-plan .v2-panel-body { overflow: visible; padding: 16px; }
+html.v2-doc [data-igs-close="plan"] { display: none; }
+
+html.v2-prep,
+html.v2-prep body { overflow: hidden; }
+
+/* ---------- 좁은 데스크톱 ---------- */
+@media (max-width: 1179px) and (min-width: 761px) and (orientation: landscape) {
+  .igs-badge { top: var(--igs-hud-top, 84px); }
+  .igs-hud { max-width: calc(100vw - 230px); }
+}
+@media (max-width: 1100px) and (min-width: 761px) and (orientation: landscape) {
+  .igs-quest { display: none; }
+}
+
+/* ---------- 휴대폰: 아래 메뉴와 아래 시트 ---------- */
+@media (max-width: 760px), (max-width: 1100px) and (orientation: portrait) {
+  html.v2-scene .strip {
+    top: 6px;
+    margin: 6px 6px 0;
+    max-width: calc(100vw - 12px);
+    padding: 6px 8px 8px;
+    gap: 6px 8px;
+    border-radius: 12px;
+  }
+  html.v2-scene .strip::after { content: ""; flex-basis: 100%; order: 1; height: 0; }
+  html.v2-scene .strip .timer { display: contents; }
+  html.v2-scene .strip .phases,
+  html.v2-scene .strip #treset,
+  html.v2-scene .strip #tset,
+  html.v2-scene .strip .igs-strip-q,
+  html.v2-scene .strip #tmode { order: 2; }
+  html.v2-scene .strip #clock { margin-left: auto; }
+  html.v2-scene .strip .igs-strip-q { display: none; }
+  html.v2-scene .strip > a { font-size: 0; width: 28px; text-align: center; }
+  html.v2-scene .strip > a::before { content: "←"; font-size: 18px; }
+  html.v2-scene .strip #treset { min-width: 44px; }
+  html.v2-scene .strip #tset {
+    width: 44px;
+    font-size: 0;
+    background: rgba(6, 18, 32, 0.5) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23edf4fc' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='13' r='8'/%3E%3Cpath d='M12 9v4l2.5 2M9 2h6'/%3E%3C/svg%3E") center / 20px no-repeat;
+  }
+  html.v2-scene .strip .ttl { font-size: 16px; }
+  html.v2-scene .strip .ttl::before { width: 26px; height: 26px; background-size: 26px; }
+  html.v2-scene .strip .ttl small { display: none; }
+  html.v2-scene .strip #tlabel { display: none; }
+  html.v2-scene .strip .timer .clock { font-size: 17px; min-width: 3.4ch; }
+  html.v2-scene .strip .timer button,
+  html.v2-scene .strip .phases button { min-height: 44px; }
+  html.v2-scene .strip .phases button { padding: 4px 10px; }
+  html.v2-scene .strip .timer button { padding: 2px 9px; }
+  html.v2-scene .igs-strip-info { width: 44px; height: 44px; }
+  .igs-badge { display: none; }
+  .igs-hud { left: 6px; right: 6px; max-width: none; padding: 4px; gap: 4px; }
+  .igs-hud .v2-cap { min-height: 44px; padding: 4px 9px; }
+  .igs-hud .v2-cap-btn { min-height: 44px; min-width: 44px; }
+  .igs-hud:not([data-expanded="true"]) .v2-cap:not([data-core]),
+  .igs-hud:not([data-expanded="true"]) .igs-scen,
+  .igs-hud:not([data-expanded="true"]) #igs-play,
+  .igs-hud:not([data-expanded="true"]) #igs-speed { display: none; }
+  .igs-hud .v2-cap { padding: 3px 8px 3px 7px; gap: 5px; }
+  .igs-hud .igs-more { display: inline-grid; margin-left: auto; }
+  .igs-hud[data-expanded="true"] .igs-cap-state { display: inline-flex; }
+  .igs-quest { display: none; }
+  .igs-tools {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+    gap: 4px;
+    padding: 4px 6px calc(4px + env(safe-area-inset-bottom, 0px));
+    border-radius: 16px 16px 0 0;
+    transform: none;
+  }
+  .igs-tools .v2-tool { flex: 1 1 0; width: auto; min-height: 56px; }
+  .igs-root .v2-panel {
+    top: auto;
+    right: 0;
+    bottom: var(--igs-nav-h, 66px);
+    left: 0;
+    width: auto;
+    height: var(--igs-sheet-h, 34vh);
+    max-height: none;
+    border-radius: 18px 18px 0 0;
+  }
+  #v2-plan { bottom: var(--igs-nav-h, 66px); }
+  #igs-status, #igs-settings { width: auto; }
+  .igs-dock {
+    left: 6px;
+    right: 6px;
+    bottom: calc(var(--igs-nav-h, 66px) + var(--igs-sheet-h, 34vh) + 6px);
+    max-width: none;
+    align-items: stretch;
+  }
+  .igs-root[data-panel="none"] .igs-dock { bottom: calc(var(--igs-nav-h, 66px) + 6px); }
+  .igs-select { width: auto; max-height: 38vh; }
+  .igs-qbar .v2-btn { min-height: 44px; }
+  .igs-qbar { padding: 6px 10px; }
+  .igs-timeline { padding: 4px; border-radius: 14px; }
+  .igs-segs { display: none; }
+  .igs-prev, .igs-mtime { display: inline-flex; }
+  .igs-prev { align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border: 1px solid var(--ui-border); border-radius: 12px; background: rgba(255, 255, 255, 0.04); color: var(--ui-text); font: inherit; cursor: pointer; }
+  .igs-mtime { flex: 1; align-items: center; justify-content: center; gap: 6px; min-height: 44px; font-family: var(--mono); font-weight: 600; color: var(--ui-text); }
+  .igs-next { min-width: 96px; min-height: 44px; }
+  .igs-camrow { position: fixed; top: var(--v2-top, 180px); right: 6px; }
+  .igs-camrow .igs-wide,
+  .igs-camrow [data-igs-cam="rotl"],
+  .igs-camrow [data-igs-cam="rotr"] { display: none; }
+  .igs-camrow .v2-pill { width: 44px; padding: 0; justify-content: center; }
+  .igs-camrow .v2-pill span { display: none; }
+  .igs-banner { min-height: 44px; min-width: 44px; justify-content: center; padding: 3px; font-size: 12px; }
+  .igs-banner .igs-bn-name,
+  .igs-banner .igs-bn-val,
+  .igs-banner .igs-bn-cut { display: none; }
+  .igs-banner .igs-bn-code { min-width: 36px; height: 36px; font-size: 13px; }
+  .igs-banners .igs-banner[data-minor] { display: none; }
+  html.v2-doc .igs-root #v2-plan { width: calc(100vw - 12px); margin: 10px auto 32px; }
+  html.v2-scene .toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .igs-root *, .igs-banner { transition: none !important; animation: none !important; }
+}
+
+/* ---------- 구간 보고(턴 보고)와 재생 진행 ---------- */
+.igs-timeline { position: relative; }
+.igs-prog {
+  position: absolute; left: 10px; right: 10px; top: 2px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--ui-gold) calc(var(--igs-prog, 0) * 100%), transparent 0);
+  opacity: 0; transition: opacity 0.2s; pointer-events: none;
+}
+.igs-root[data-playing="true"] .igs-prog { opacity: 1; }
+.igs-report {
+  position: fixed; z-index: 6; left: 16px; top: var(--v2-top, 140px);
+  width: min(340px, calc(100vw - var(--igs-reserve, 560px) - 32px)); min-width: 220px;
+  padding: 10px 14px 11px; border: 1px solid var(--ui-border); border-left: 3px solid var(--ui-gold); border-radius: 12px;
+  background: rgba(10, 25, 42, 0.93); color: var(--ui-text); box-shadow: var(--ui-shadow);
+  pointer-events: none; opacity: 0; transform: translateY(-4px); transition: opacity 0.3s, transform 0.3s;
+}
+.igs-report[data-show="true"] { opacity: 1; transform: none; }
+.igs-rep-h { display: flex; align-items: baseline; gap: 8px; margin: 0 0 6px; flex-wrap: wrap; }
+.igs-rep-t { font-family: var(--ui-mono, ui-monospace, monospace); font-weight: 700; font-size: 15px; color: var(--ui-gold); }
+.igs-rep-s { font-size: 12.5px; color: var(--ui-muted, #b8cad8); }
+.igs-report ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.igs-report li { position: relative; padding-left: 14px; font-size: 13.5px; line-height: 1.4; }
+.igs-report li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 7px; height: 7px; border-radius: 50%; background: var(--ui-mint); }
+.igs-report li[data-tone="danger"] { color: #ffc2cf; font-weight: 700; }
+.igs-report li[data-tone="danger"]::before { background: var(--ui-danger); }
+.igs-report li[data-tone="sun"]::before { background: #ffd36b; }
+.igs-report li[data-tone="cyan"]::before { background: var(--ui-cyan); }
+.igs-report li[data-tone="gold"]::before { background: #e0a46e; }
+html.v2-doc .igs-report { display: none; }
+@media (max-width: 760px), (max-width: 1100px) and (orientation: portrait) {
+  .igs-report { left: 6px; right: 6px; width: auto; min-width: 0; padding: 6px 10px 7px; top: auto; bottom: calc(var(--igs-nav-h, 66px) + var(--igs-sheet-h, 34vh) + 72px); }
+  .igs-root[data-panel="none"] .igs-report { bottom: calc(var(--igs-nav-h, 66px) + 72px); }
+  .igs-rep-h { margin-bottom: 2px; }
+  .igs-rep-s { display: none; }
+  .igs-report li { font-size: 12.5px; }
+  .igs-report li + li { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .igs-report { transition: none; }
+}

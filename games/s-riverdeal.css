@@ -1,0 +1,69 @@
+.rd-root { color: var(--ink); font-size: 14px; overflow-wrap: anywhere; }
+.rd-root * { box-sizing: border-box; min-width: 0; }
+.rd-notice { color: var(--ink-2); font-size: 14px; }
+.rd-root :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.rd-reflect :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.rd-root p { margin: 10px 0; }
+.rd-root h4 { margin: 12px 0 8px; }
+.rd-root .btn { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+.rd-root .tabs button { min-height: 44px; font-size: 14px; }
+.rd-root input { font-size: 16px; max-width: 100%; }
+.rd-root select { display: block; width: 100%; min-height: 44px; font-size: 16px; color: var(--ink); background: var(--sheet-2); border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.rd-root textarea { font-size: 16px; width: 100%; min-height: 90px; resize: vertical; }
+.rd-root input.note { min-height: 44px; height: auto; }
+.rd-root label { display: block; margin: 8px 0 4px; color: var(--ink); font-size: 14px; }
+.rd-root .row { flex-wrap: wrap; }
+.rd-root svg { width: 100%; height: auto; max-width: 100%; }
+.rd-root .field { margin-bottom: 10px; }
+.rd-root .rd-toggle { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.rd-root .rd-toggle input { flex: 0 0 auto; width: 20px; height: 20px; }
+.rd-root .rd-desk { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-areas: "material mode" "material proposal" "results response" "results final" "results memo"; align-items: start; }
+.rd-mode-area { grid-area: mode; }
+.rd-material-area { grid-area: material; }
+.rd-proposal-area { grid-area: proposal; }
+.rd-results-area { grid-area: results; }
+.rd-response-area { grid-area: response; }
+.rd-final-area { grid-area: final; }
+.rd-memo-area { grid-area: memo; display: grid; gap: 14px; }
+.rd-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.rd-stepper { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.rd-root .rd-step { flex: 0 0 44px; padding: 4px; }
+.rd-number { width: 100%; min-height: 44px; border: 1px solid var(--line); background: var(--sheet-2); color: var(--ink); border-radius: 4px; padding: 6px; }
+.rd-number[aria-invalid="true"] { border: 2px solid var(--bad); }
+.rd-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.rd-value { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.rd-data { margin: 8px 0; }
+.rd-data dt { font-weight: 600; margin-top: 8px; }
+.rd-data dd { margin: 3px 0 8px; white-space: pre-wrap; }
+.rd-party { border: 1px solid var(--line); border-radius: 6px; padding: 12px; margin: 12px 0; }
+.rd-scenario-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.rd-scenario-cards section { padding: 10px; border: 1px solid var(--line); border-radius: 6px; }
+.rd-wants { display: grid; gap: 8px; margin: 12px 0; }
+.rd-cascade { margin: 14px 0; }
+.rd-cascade-party { border: 1px solid var(--line); padding: 10px; margin: 12px 0; }
+.rd-check { padding: 8px; margin: 8px 0; border: 1px solid var(--line); }
+.rd-check dd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 8px 0; }
+.rd-check dd span:last-child { grid-column: 1 / -1; }
+.rd-new-missing { border: 2px solid var(--bad); }
+.rd-error { color: var(--bad); font-size: 14px; margin: 12px 0; }
+.rd-status { color: var(--ink); margin: 12px 0; }
+.rd-history { margin-top: 16px; }
+.rd-history ol { padding-left: 24px; }
+.rd-round { border: 1px solid var(--line); background: var(--sheet); padding: 12px; margin: 12px 0; }
+.rd-round summary { min-height: 44px; cursor: pointer; padding-block: 10px; }
+.rd-reflect { color: var(--ink); font-size: 14px; overflow-wrap: anywhere; }
+.rd-reflect details { margin: 12px 0; }
+.rd-reflect p { margin: 12px 0; }
+.rd-reflect summary { min-height: 44px; cursor: pointer; }
+@media (max-width: 980px) {
+  .rd-root .rd-desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "mode" "material" "proposal" "results" "response" "final" "memo"; }
+}
+@media (max-width: 560px) {
+  .rd-inputs { grid-template-columns: minmax(0, 1fr); }
+  .rd-stepper { flex-wrap: nowrap; }
+  .rd-number { flex: 1 1 0; width: 0; }
+  .rd-metrics { grid-template-columns: minmax(0, 1fr); }
+  .rd-scenario-cards { grid-template-columns: minmax(0, 1fr); }
+  .rd-check dd { grid-template-columns: minmax(0, 1fr); }
+  .rd-root .panel { padding: 12px; }
+}

@@ -1,0 +1,175 @@
+#pv-tools {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#pv-view {
+  overflow-wrap: anywhere;
+}
+
+#pv-view > p {
+  margin-top: 10px;
+}
+
+#pv-view .pv-head {
+  gap: 8px;
+}
+
+#pv-title {
+  font-size: 18px;
+}
+
+#pv-guide {
+  margin-block: 12px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+#pv-guide summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#pv-guide ol {
+  padding-left: 1.5em;
+}
+
+#pv-nums {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#pv-nums [aria-current="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  font-weight: 700;
+}
+
+#pv-nums .pv-has::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+#pv-q {
+  font-size: clamp(20px, 4.5vw, 34px);
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+#pv-view .pv-nav {
+  margin-top: 14px;
+}
+
+#pv-view .pv-sec {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+#pv-view .pv-sec > p {
+  margin-block: 8px;
+}
+
+#pv-view .field {
+  margin-top: 10px;
+  min-width: 0;
+}
+
+#pv-view .btn {
+  max-width: 100%;
+}
+
+#pv-probebox {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--sheet-2);
+}
+
+#pv-probetext {
+  margin-top: 4px;
+  white-space: pre-wrap;
+}
+
+#pv-hab {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 6px;
+}
+
+#pv-hab .btn {
+  min-width: 0;
+  white-space: normal;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+#pv-hab [aria-pressed="true"]::before {
+  content: "✓" / "";
+}
+
+#pv-reflect {
+  overflow-wrap: anywhere;
+}
+
+#pv-rtitle {
+  flex-wrap: wrap;
+}
+
+#pv-rbody {
+  margin-top: 10px;
+}
+
+#pv-rbody h4 {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.pv-habits {
+  margin-block: 10px;
+  padding-left: 1.3em;
+  font-size: 13px;
+}
+
+.pv-list {
+  padding-left: 1.3em;
+  margin-block: 8px 14px;
+  font-size: 13px;
+}
+
+.pv-list li {
+  margin-top: 10px;
+}
+
+.pv-list p {
+  white-space: pre-wrap;
+}
+
+#pv-roverall {
+  margin-block: 12px;
+  white-space: pre-wrap;
+}
+
+#pv-clear-confirm {
+  margin-top: 8px;
+}
+
+#pv-clear-confirm .row {
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  #pv-view .pv-nav .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}

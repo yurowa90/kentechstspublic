@@ -1,0 +1,20 @@
+{
+  "설명": "손상 문자열과 Git 이력에서 확인한 필드 삭제 조리법. 정상 저장은 실행 때 화면에서 다시 만든다.",
+  "damage": ["깨진 JSON", "null", "null 상태", "숫자", "배열", "없는 팀", "100만 자 문자열"],
+  "solo": [
+    {"name": "initial 없음", "commit": "adc9b502c2584bba57031929586638fbb24f3db4", "remove": ["initial"], "expect": "restore"},
+    {"name": "previous 없음", "commit": "adc9b502c2584bba57031929586638fbb24f3db4", "remove": ["previous"], "expect": "restore"},
+    {"name": "재도전 필드 없음", "commit": "adc9b502c2584bba57031929586638fbb24f3db4", "remove": ["initial", "previous"], "expect": "restore"},
+    {"name": "seedKey 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["state.seedKey", "initial.seedKey"], "expect": "restore"},
+    {"name": "seedMode 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["state.seedMode", "initial.seedMode"], "expect": "restore"},
+    {"name": "salt 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["state.salt", "initial.salt"], "expect": "restore"},
+    {"name": "서명 도입 전 씨앗", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["state.seedKey", "state.seedMode", "state.salt", "initial.seedKey", "initial.seedMode", "initial.salt"], "expect": "restore"}
+  ],
+  "host": [
+    {"name": "identity 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["identity"], "expect": "restore", "migration": true},
+    {"name": "fingerprint 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["fingerprint"], "expect": "restore", "migration": false},
+    {"name": "sid 없음", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["state.sid"], "expect": "restore", "migration": true},
+    {"name": "서명 도입 전 진행자", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": ["identity", "fingerprint", "state.sid", "state.seedKey", "state.seedMode", "state.salt"], "expect": "restore", "migration": true},
+    {"name": "옛 4자리 방 코드", "commit": "198345b0bc9aead185c4862ba76cfcfd198ca0c8", "remove": [], "legacy_room": "ABCD", "migration": true, "expect": "restore"}
+  ]
+}

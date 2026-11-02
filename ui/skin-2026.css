@@ -1,0 +1,365 @@
+/* 2026 최우수 혁신기술 선정평가 스킨: 휴대용 게임기 시절 법정 추리 게임의 '법정 기록' 창 오마주
+ * 밝은 화면: 양피지 바탕에 짙은 갈색 글자, 짙은 나무 테와 금색 안쪽 테. 어두운 화면: 어두운 나무 판과 금색 테.
+ * 제목은 굵은 디스플레이 글꼴(var(--display)), 평가표 머리는 나무 이름패, 점수를 고른 칸은 금빛 '제출된 증거'.
+ * 모든 선택자는 html.v2-skin-2026 아래에 둔다. 띠(#strip)의 배경은 토큰(--ink)으로만 바뀌고,
+ * 게임 안의 격자·폭·표시·넘침·위치는 바꾸지 않는다(표면·테두리·글꼴만). 보고서 홍보자료 머리 색(.bro-head)은 그대로 둔다. */
+@media screen {
+  html.v2-skin-2026:root {
+    --paper: #eadbb9;
+    --sheet: #faf3e1;
+    --sheet-2: #f1e5c8;
+    --ink: #33200f;
+    --ink-2: #5a3d22;
+    --ink-3: #6b4d2e;
+    --line: #a3804f;
+    --accent: #22508c;
+    --accent-soft: #dde6f2;
+    --accent-ink: #fffaf0;
+    --volt: #7d5800;
+    --volt-soft: #f3e3b4;
+    --ok: #2f6a2a;
+    --warn: #7c5300;
+    --bad: #a5321d;
+    --bad-soft: #f5dccf;
+    --radius: 3px;
+    --shadow: 0 1px 0 rgba(51, 32, 15, 0.12), 3px 3px 0 rgba(51, 32, 15, 0.12);
+    --k26-wood: #5a3519;
+    --k26-trim: #d2a440;
+    --k26-head: #4a2c14;
+    --k26-head-ink: #f6e6bf;
+    --k26-fill: #f4dfa0;
+    --k26-rec: #a8261c;
+    --k26-rec-soft: #f8dcd2;
+    --k26-focus: #22508c;
+    --k26-grain: rgba(90, 53, 25, 0.05);
+    --k26-plate: #2a170a;
+    --k26-plate-ink: #f6e6bf;
+    --k26-plate-kick: #e9c46a;
+    --k26-chip: #f7eed6;
+    --k26-chip-ink: #5a3d22;
+    --k26-chip-ok: #2f6a2a;
+    --k26-chip-info: #22508c;
+    --k26-chip-rec: #a8261c;
+    --k26-chip-edge: #5a3519;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-2026:root:not([data-theme="light"]) {
+      --paper: #170e08;
+      --sheet: #26180d;
+      --sheet-2: #2f1f12;
+      --ink: #f2e3c2;
+      --ink-2: #dcc79c;
+      --ink-3: #c4ab7d;
+      --line: #7a5a32;
+      --accent: #e2b64e;
+      --accent-soft: #3e2e12;
+      --accent-ink: #1c120b;
+      --volt: #f0c25a;
+      --volt-soft: #3a2b12;
+      --ok: #9fd07a;
+      --warn: #f0b84d;
+      --bad: #f58e72;
+      --bad-soft: #3f1d15;
+      --radius: 3px;
+      --shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 3px 3px 0 rgba(0, 0, 0, 0.4);
+      --k26-wood: #0d0703;
+      --k26-trim: #b88a35;
+      --k26-head: #120a05;
+      --k26-head-ink: #f0c96a;
+      --k26-fill: #4a3612;
+      --k26-rec: #ff8f78;
+      --k26-rec-soft: #45180f;
+      --k26-focus: #ffd36a;
+      --k26-grain: rgba(0, 0, 0, 0.22);
+      --k26-plate: #120a05;
+      --k26-plate-ink: #f6e6bf;
+      --k26-plate-kick: #e9c46a;
+      --k26-chip: #1c120b;
+      --k26-chip-ink: #dcc79c;
+      --k26-chip-ok: #a8d880;
+      --k26-chip-info: #9cc4ff;
+      --k26-chip-rec: #ff8f78;
+      --k26-chip-edge: #b88a35;
+      color-scheme: dark;
+    }
+  }
+  html.v2-skin-2026:root[data-theme="dark"] {
+    --paper: #170e08;
+    --sheet: #26180d;
+    --sheet-2: #2f1f12;
+    --ink: #f2e3c2;
+    --ink-2: #dcc79c;
+    --ink-3: #c4ab7d;
+    --line: #7a5a32;
+    --accent: #e2b64e;
+    --accent-soft: #3e2e12;
+    --accent-ink: #1c120b;
+    --volt: #f0c25a;
+    --volt-soft: #3a2b12;
+    --ok: #9fd07a;
+    --warn: #f0b84d;
+    --bad: #f58e72;
+    --bad-soft: #3f1d15;
+    --radius: 3px;
+    --shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 3px 3px 0 rgba(0, 0, 0, 0.4);
+    --k26-wood: #0d0703;
+    --k26-trim: #b88a35;
+    --k26-head: #120a05;
+    --k26-head-ink: #f0c96a;
+    --k26-fill: #4a3612;
+    --k26-rec: #ff8f78;
+    --k26-rec-soft: #45180f;
+    --k26-focus: #ffd36a;
+    --k26-grain: rgba(0, 0, 0, 0.22);
+    --k26-plate: #120a05;
+    --k26-plate-ink: #f6e6bf;
+    --k26-plate-kick: #e9c46a;
+    --k26-chip: #1c120b;
+    --k26-chip-ink: #dcc79c;
+    --k26-chip-ok: #a8d880;
+    --k26-chip-info: #9cc4ff;
+    --k26-chip-rec: #ff8f78;
+    --k26-chip-edge: #b88a35;
+    color-scheme: dark;
+  }
+
+  /* ---------- 바탕: 양피지(밝음) / 나무 판자(어두움) ---------- */
+  html.v2-skin-2026 body {
+    background-color: var(--paper);
+    background-image:
+      repeating-linear-gradient(90deg, var(--k26-grain) 0 2px, transparent 2px 140px),
+      repeating-linear-gradient(0deg, var(--k26-grain) 0 1px, transparent 1px 7px);
+  }
+
+  /* ---------- 위 띠: 배경은 토큰(--ink)만, 아래에 금색 테 ---------- */
+  html.v2-skin-2026 .strip { box-shadow: inset 0 -3px 0 var(--k26-trim); }
+  html.v2-skin-2026 .strip .ttl { letter-spacing: 0.02em; }
+
+  /* ---------- 장면 틀, 이름표, 칩 ---------- */
+  html.v2-skin-2026 .v2-stage {
+    border-radius: 4px;
+    background-color: var(--k26-plate);
+    box-shadow: 0 0 0 3px var(--k26-trim), 0 0 0 6px var(--k26-plate), 4px 6px 0 6px rgba(0, 0, 0, 0.22);
+  }
+  html.v2-skin-2026 .v2-stage-canvas { image-rendering: pixelated; }
+  html.v2-skin-2026 .v2-stage-top {
+    padding: 4px 12px 5px;
+    background-color: var(--k26-plate);
+    border: 2px solid var(--k26-trim);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px #000, 3px 3px 0 rgba(0, 0, 0, 0.35);
+  }
+  html.v2-skin-2026 .v2-stage-kicker { color: var(--k26-plate-kick); }
+  html.v2-skin-2026 .v2-stage-title {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    color: var(--k26-plate-ink);
+  }
+  html.v2-skin-2026 .v2-stage-chip {
+    background-color: var(--k26-chip);
+    color: var(--k26-chip-ink);
+    border: 2px solid var(--k26-chip-edge);
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  }
+  html.v2-skin-2026 .v2-stage-chip .num { color: var(--k26-chip-ink); font-weight: 700; }
+  html.v2-skin-2026 .v2-stage-chip.tone-ok .num { color: var(--k26-chip-ok); }
+  html.v2-skin-2026 .v2-stage-chip.tone-info .num { color: var(--k26-chip-info); }
+  html.v2-skin-2026 .v2-stage-chip.tone-rec { border-color: var(--k26-chip-rec); }
+  html.v2-skin-2026 .v2-stage-chip.tone-rec .num { color: var(--k26-chip-rec); font-family: var(--display); font-weight: 400; }
+  html.v2-skin-2026 .v2-stage-broken .v2-stage-canvas { visibility: hidden; }
+
+  /* ---------- 문제 상황(사건 기록)과 문제(증거 메모) ---------- */
+  html.v2-skin-2026 .brief .scenario {
+    padding: 12px 16px;
+    background-color: var(--sheet);
+    border: 1px solid var(--k26-wood);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 2px var(--k26-trim), var(--shadow);
+  }
+  html.v2-skin-2026 .brief .scenario > .label {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  html.v2-skin-2026 .brief .task {
+    background-color: var(--volt-soft);
+    border-left: 4px solid var(--k26-trim);
+    border-radius: 0 3px 3px 0;
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- 패널: 법정 기록 창(나무 테 + 금색 안쪽 테) ---------- */
+  html.v2-skin-2026 .panel {
+    background-color: var(--sheet);
+    border: 1px solid var(--k26-wood);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 2px var(--k26-trim), var(--shadow);
+  }
+  html.v2-skin-2026 .panel .panel { box-shadow: inset 0 0 0 1px var(--k26-trim); }
+  html.v2-skin-2026 .panel > h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--k26-trim);
+  }
+  html.v2-skin-2026 .panel > h3::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    background-color: var(--k26-trim);
+    box-shadow: 0 0 0 1px var(--k26-wood);
+    transform: rotate(45deg);
+  }
+  html.v2-skin-2026 .panel > h3 .chip,
+  html.v2-skin-2026 .panel > h3 .tag-mine,
+  html.v2-skin-2026 .panel > h3 .tag-official { font-family: var(--body); font-weight: 600; letter-spacing: 0; }
+  html.v2-skin-2026 .chip { border-radius: 3px; border-color: var(--line); }
+  html.v2-skin-2026 .tag-mine,
+  html.v2-skin-2026 .tag-official { border-radius: 2px; }
+
+  /* ---------- 탭: 증거품 목록 탭 ---------- */
+  html.v2-skin-2026 .tabs { border-bottom: 2px solid var(--k26-wood); }
+  html.v2-skin-2026 .tabs button {
+    background-color: var(--sheet-2);
+    color: var(--ink-2);
+    border-radius: 3px 3px 0 0;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  html.v2-skin-2026 .tabs button:hover { color: var(--ink); }
+  html.v2-skin-2026 .tabs button[aria-selected="true"] {
+    background-color: var(--k26-head);
+    color: var(--k26-head-ink);
+    border-bottom-color: var(--k26-trim);
+    box-shadow: inset 0 0 0 1px var(--k26-trim);
+  }
+
+  /* ---------- 평가표: 나무 이름패 머리, 고른 칸은 금빛 '제출된 증거' ---------- */
+  html.v2-skin-2026 .scoretable th,
+  html.v2-skin-2026 .scoretable td { border-color: var(--line); }
+  html.v2-skin-2026 .scoretable th {
+    background-color: var(--k26-head);
+    color: var(--k26-head-ink);
+    border-color: var(--k26-wood);
+    font-weight: 700;
+  }
+  html.v2-skin-2026 .scoretable td.name { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
+  html.v2-skin-2026 .scoretable select {
+    background-color: var(--sheet);
+    color: var(--ink);
+    border-color: var(--k26-wood);
+    border-radius: 2px;
+  }
+  html.v2-skin-2026 .scoretable select:not(:has(option[value=""]:checked)) {
+    background-color: var(--k26-fill);
+    border-color: var(--k26-trim);
+    box-shadow: inset 0 0 0 1px var(--k26-trim);
+    font-weight: 700;
+  }
+  html.v2-skin-2026 .scoretable .total { color: var(--accent); }
+  html.v2-skin-2026 .scoretable tr.best td.total { color: var(--ink); }
+  html.v2-skin-2026 .spec th { color: var(--ink); border-bottom: 2px solid var(--k26-wood); }
+  html.v2-skin-2026 .spec td { border-bottom-color: var(--line); }
+
+  /* ---------- 최우수 기술 추천: 증거품 패, 누른 패에는 붉은 모서리 ---------- */
+  html.v2-skin-2026 .pick button {
+    background-color: var(--sheet);
+    border-color: var(--k26-wood);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 2px var(--k26-trim), 2px 2px 0 rgba(0, 0, 0, 0.18);
+  }
+  html.v2-skin-2026 .pick button:hover { border-color: var(--k26-rec); }
+  html.v2-skin-2026 .pick button[aria-pressed="true"] {
+    background-color: var(--k26-rec-soft);
+    background-image: linear-gradient(225deg, var(--k26-rec) 0 12px, transparent 12px);
+    border-color: var(--k26-rec);
+    box-shadow: inset 0 0 0 2px var(--k26-rec), 2px 2px 0 rgba(0, 0, 0, 0.18);
+    color: var(--ink);
+  }
+
+  /* ---------- 홍보자료 속 후기 카드와 표(보고서 색 머리는 그대로) ---------- */
+  html.v2-skin-2026 .review {
+    background-color: var(--sheet-2);
+    border-color: var(--line);
+    border-left: 3px solid var(--k26-trim);
+    border-radius: 2px;
+  }
+
+  /* ---------- 버튼 ---------- */
+  html.v2-skin-2026 .btn {
+    background-color: var(--sheet);
+    color: var(--ink);
+    border-color: var(--k26-wood);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px var(--sheet), inset 0 0 0 2px var(--k26-trim), 2px 2px 0 rgba(0, 0, 0, 0.18);
+  }
+  html.v2-skin-2026 .btn:hover { border-color: var(--accent); }
+  html.v2-skin-2026 .btn.ghost { background-color: transparent; box-shadow: none; }
+  html.v2-skin-2026 .btn.primary {
+    background-color: var(--accent);
+    border-color: var(--k26-wood);
+    color: var(--accent-ink);
+    font-family: var(--display);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 0 0 2px var(--k26-trim), 2px 2px 0 rgba(0, 0, 0, 0.25);
+  }
+  html.v2-skin-2026 .btn[aria-pressed="true"] {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  html.v2-skin-2026 .btn[disabled] { box-shadow: none; }
+
+  /* ---------- 글 상자: 괘선 기록지 ---------- */
+  html.v2-skin-2026 textarea.note,
+  html.v2-skin-2026 input.note {
+    background-color: var(--sheet-2);
+    border-color: var(--line);
+    border-radius: 2px;
+  }
+  html.v2-skin-2026 textarea.note {
+    background-image: linear-gradient(to bottom, transparent calc(100% - 1px), var(--k26-grain) calc(100% - 1px));
+    background-size: 100% 1.55em;
+    background-position: 0 8px;
+    background-attachment: local;
+  }
+
+  /* ---------- 면접실·성찰 ---------- */
+  html.v2-skin-2026 .qcard,
+  html.v2-skin-2026 details.reveal {
+    background-color: var(--sheet);
+    border-color: var(--k26-wood);
+    border-radius: 3px;
+    box-shadow: inset 0 3px 0 var(--k26-trim), 2px 2px 0 rgba(0, 0, 0, 0.18);
+  }
+  html.v2-skin-2026 .qcard .who { font-family: var(--display); font-weight: 400; letter-spacing: 0.06em; }
+  html.v2-skin-2026 details.reveal summary { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
+  html.v2-skin-2026 details.reveal summary .tag-mine,
+  html.v2-skin-2026 details.reveal summary .tag-official { font-family: var(--body); font-weight: 600; letter-spacing: 0; }
+  html.v2-skin-2026 .recap dt { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; }
+  html.v2-skin-2026 .caution { border-radius: 3px; border-left-width: 4px; }
+
+  /* ---------- 포커스: 색만 바꾼다 ---------- */
+  html.v2-skin-2026 :focus-visible { outline-color: var(--k26-focus); }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  html.v2-skin-2026 .btn:active:not([disabled]),
+  html.v2-skin-2026 .pick button:active { transform: translate(1px, 1px); }
+}
+
+/* 좁은 화면: 장면 이름표를 한 줄로 줄여 단상과 증거 함을 가리지 않는다. */
+@media screen and (max-width: 560px) {
+  html.v2-skin-2026 .v2-stage-top { padding: 3px 10px; }
+  html.v2-skin-2026 .v2-stage-kicker { display: none; }
+  html.v2-skin-2026 .v2-stage-title { font-size: 15px; }
+}

@@ -1,0 +1,83 @@
+.pb-row {
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+}
+.pb-row > span {
+  min-width: 0;
+  max-width: 100%;
+}
+.pb-time {
+  overflow-wrap: anywhere;
+}
+.pb-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin-top: 8px;
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  overflow-wrap: anywhere;
+}
+.pb-head {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.pb-card {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.pb-box .hint,
+.pb-was,
+.pb-nocrit {
+  color: var(--ink-2);
+}
+.pb-box .field {
+  min-width: 0;
+}
+.pb-box .note {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+.pb-box .seg {
+  flex-wrap: wrap;
+  align-self: flex-start;
+  max-width: 100%;
+}
+.pb-box .seg button {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#pb-note {
+  min-width: 0;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+#pb-reflect {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#pb-reflect .pb-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+#pb-reflect .pb-item {
+  border-top: 1px solid var(--line);
+  margin-top: 10px;
+  padding-top: 10px;
+}
+#pb-reflect .pb-item p + p {
+  margin-top: 4px;
+}
+#pb-reflect .pb-old {
+  font-size: 15px;
+  margin-top: 18px;
+}
+#pb-reflect .pb-empty {
+  margin-top: 8px;
+}

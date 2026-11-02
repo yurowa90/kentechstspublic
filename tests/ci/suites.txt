@@ -1,0 +1,49 @@
+# 브라우저 검사 목록과 CI 샤드 배분.
+# 칸(공백 구분): 이름  샤드  예상초  [optional]
+#   이름    tests/league/<이름>.py. ux_task:<cfg>는 ux_task.py --cfg <cfg>로 돈다.
+#   샤드    1 이상의 정수. CI의 browser 매트릭스는 이 칸에 적힌 번호로 만든다(browser.sh --shards, 지금 1~8).
+#   예상초  맥 로컬 통합 검사 18(작업 줄기 322bc7c, rev13 병합)의 실행 시간. rev14·rev14b는 #54 맥 최종 확인(0405541), rev15는 갈래 맥 로컬 실측(fb25f8a, 92·93초), rev16은 갈래 맥 로컬 --all 실측(f7c4786, 196초를 200으로 올림), feedback은 이 줄을 넣은 커밋의 갈래 맥 로컬 실측(12~14초), sheet는 #79 갈래 맥 로컬 실측(151초, 3차 검토 반영 뒤)의 실행 시간이다. rev17은 임시값(맥 로컬 첫 실행 뒤 실측으로 바꿈), rev18은 갈래 맥 로컬 --all 실측(caa1c46, 78초를 80으로 올림).
+#   optional  파일이 없으면 SKIP으로 남기고 실패로 치지 않는다. 표시가 없는 검사의 파일이 없으면 실패다.
+#   mac       CI 샤드에서는 돌리지 않고 --all(맥 로컬 최종 확인)에서만 돈다. 수십 ms 단위 애니메이션 시간 계약처럼
+#             공유 실행기에서 판정할 수 없는 검사(지금 fx_map, #56). 기준 수치 줄은 필수 검사와 같이 필요하다.
+# 필수 검사(optional 표시 없음)는 baseline-counts.txt에 기준 수치 줄이 있어야 한다. browser.sh가 칸·중복과 함께 확인한다.
+# 줄 순서가 샤드 안 실행 순서다. 샤드 합(예상초)은 README의 배분표와 맞춘다.
+rev14             8   227
+rev13             7   211
+rev14b            7   262
+rev15             4    93
+rev16             2   200
+rev17             6   420
+rev18             8    80
+rev12             6   117
+rev11             4   111
+rev10             5   114
+rev9              8   181
+rev8c             4   311
+s7                3   322
+s8n               6   229
+d82ux             3    93
+d80b              5    48
+econui            5   265
+solo              3   143
+score1            8    60
+ux_s2fix          8   136
+ux_s2fix2         4   151
+ux_coach          4    29
+ux_task:desktop   2    16
+ux_task:tablet    5    15
+ux_task:mobile    8    16
+fx_event          1   594
+fx_end            7   182
+fx_map            7    61  mac
+fx_replay         6   165
+fx_town           7    19
+endgrid           1   130
+peek              5   162
+next              8    45
+sheet             3   151
+v3a               6    67
+snaprender        6    26
+webkit            5    80
+storage           2   507
+feedback          6    13

@@ -1,0 +1,320 @@
+/* 2023 가람국 10년 계획 스킨: 80년대 교육용 개척 길 게임 오마주
+ * 밝은 화면은 양피지(크림) 장부와 짙은 갈색 잉크, 어두운 화면은 검은 화면 위 형광 초록·호박색 글자.
+ * 강조색은 그 시절 컴퓨터의 고해상도 색(초록·보라·주황)에서 가져온다.
+ * 모든 선택자는 html.v2-skin-2023 아래에만 둔다. #strip/.strip의 위치·배경은 바꾸지 않고(띠 배경은 --ink 토큰),
+ * 게임 내부 배치(grid·width·display·overflow·position)도 바꾸지 않는다. 초점 윤곽은 색만 바꾼다. */
+
+@media screen {
+  html.v2-skin-2023:root {
+    --paper: #ece0c0;
+    --sheet: #fbf5e2;
+    --sheet-2: #f3e9cc;
+    --ink: #2a1f12;
+    --ink-2: #4d3c25;
+    --ink-3: #6a5638;
+    --line: #b9a272;
+    --accent: #8f420a;
+    --accent-soft: #f3dcc0;
+    --accent-ink: #fffaf0;
+    --volt: #6a3a9c;
+    --volt-soft: #f6e3a3;
+    --ok: #2f6a1e;
+    --warn: #855000;
+    --bad: #a3261a;
+    --bad-soft: #f5d2c6;
+    --sci: #b0235a;
+    --hap: #1f58b8;
+    --env: #2c6a1c;
+    --nb23-picked-bg: #493218;
+    --nb23-picked-ink: #fffaf0;
+    --ot-rule: #2a1f12;
+    --ot-shadow: rgba(42, 31, 18, 0.28);
+    --ot-bar: #2a1f12;
+    --ot-bar-ink: #f6ead0;
+    --ot-bar-kicker: #f0b46a;
+    --ot-status: #f3e9cc;
+    --ot-cursor: #f0b46a;
+    --ot-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M1 1h1v1H1zM4 3h1v1H4zM2 5h1v1H2z' fill='%23c9b385' fill-opacity='.55'/%3E%3C/svg%3E");
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    html.v2-skin-2023:root:not([data-theme="light"]) {
+      --paper: #000000;
+      --sheet: #070d07;
+      --sheet-2: #0d170d;
+      --ink: #b6f7c0;
+      --ink-2: #f0c060;
+      --ink-3: #a9bca5;
+      --line: #2f5a34;
+      --accent: #47d16a;
+      --accent-soft: #10331a;
+      --accent-ink: #021004;
+      --volt: #c99bff;
+      --volt-soft: #4d3a08;
+      --ok: #6fe08a;
+      --warn: #ffc04d;
+      --bad: #ff7a66;
+      --bad-soft: #3f1712;
+      --sci: #ff7ab8;
+      --hap: #7fb2ff;
+      --env: #8fe36a;
+      --nb23-picked-bg: #47d16a;
+      --nb23-picked-ink: #021004;
+      --ot-rule: #47d16a;
+      --ot-shadow: rgba(71, 209, 106, 0.18);
+      --ot-bar: #000000;
+      --ot-bar-ink: #b6f7c0;
+      --ot-bar-kicker: #f0c060;
+      --ot-status: #000000;
+      --ot-cursor: #47d16a;
+      --ot-grain: repeating-linear-gradient(0deg, rgba(71, 209, 106, 0.045) 0 1px, transparent 1px 3px);
+      color-scheme: dark;
+    }
+  }
+  html.v2-skin-2023:root[data-theme="dark"] {
+    --paper: #000000;
+    --sheet: #070d07;
+    --sheet-2: #0d170d;
+    --ink: #b6f7c0;
+    --ink-2: #f0c060;
+    --ink-3: #a9bca5;
+    --line: #2f5a34;
+    --accent: #47d16a;
+    --accent-soft: #10331a;
+    --accent-ink: #021004;
+    --volt: #c99bff;
+    --volt-soft: #4d3a08;
+    --ok: #6fe08a;
+    --warn: #ffc04d;
+    --bad: #ff7a66;
+    --bad-soft: #3f1712;
+    --sci: #ff7ab8;
+    --hap: #7fb2ff;
+    --env: #8fe36a;
+    --nb23-picked-bg: #47d16a;
+    --nb23-picked-ink: #021004;
+    --ot-rule: #47d16a;
+    --ot-shadow: rgba(71, 209, 106, 0.18);
+    --ot-bar: #000000;
+    --ot-bar-ink: #b6f7c0;
+    --ot-bar-kicker: #f0c060;
+    --ot-status: #000000;
+    --ot-cursor: #47d16a;
+    --ot-grain: repeating-linear-gradient(0deg, rgba(71, 209, 106, 0.045) 0 1px, transparent 1px 3px);
+    color-scheme: dark;
+  }
+
+  /* ---------- 바탕: 양피지 결 / 주사선 ---------- */
+  html.v2-skin-2023 body {
+    background-color: var(--paper);
+    background-image: var(--ot-grain);
+  }
+  html.v2-skin-2023 :focus-visible { outline-color: var(--accent); }
+
+  /* 상단 띠: 배경은 --ink 토큰 그대로. 단계 단추만 네모 반전 글자로 */
+  html.v2-skin-2023 .phases { border-radius: 0; }
+  html.v2-skin-2023 .phases button { border-radius: 0; }
+  html.v2-skin-2023 .strip :focus-visible { outline-color: var(--paper); }
+
+  /* ---------- 창: 두 줄 잉크 테두리와 픽셀 그림자 ---------- */
+  html.v2-skin-2023 .panel,
+  html.v2-skin-2023 .qcard,
+  html.v2-skin-2023 details.reveal {
+    background: var(--sheet);
+    border: 2px solid var(--ot-rule);
+    border-radius: 0;
+    box-shadow: inset 0 0 0 2px var(--sheet), inset 0 0 0 3px var(--line), 4px 4px 0 var(--ot-shadow);
+  }
+  html.v2-skin-2023 .panel > h3 {
+    font-family: var(--mono), var(--body);
+    letter-spacing: 0.02em;
+    padding-bottom: 6px;
+    border-bottom: 2px dotted var(--ot-rule);
+  }
+  html.v2-skin-2023 .panel > h3::before {
+    content: "\25B6";
+    color: var(--accent);
+    font-size: 0.75em;
+  }
+  html.v2-skin-2023 .qcard .who { color: var(--accent); font-family: var(--mono), var(--body); }
+  html.v2-skin-2023 details.reveal summary { font-weight: 700; }
+  html.v2-skin-2023 details.reveal summary::marker { color: var(--accent); }
+  html.v2-skin-2023 .tag-mine,
+  html.v2-skin-2023 .tag-official { border-radius: 0; }
+
+  /* 상황 안내: 길 떠나기 전 읽는 안내문 */
+  html.v2-skin-2023 .brief .task {
+    background: var(--volt-soft);
+    border-left: 4px double var(--ot-rule);
+    border-radius: 0;
+  }
+  html.v2-skin-2023 .brief .label,
+  html.v2-skin-2023 .label { letter-spacing: 0.06em; }
+
+  /* ---------- 단추·탭·칩: 네모 테두리, 누르면 반전 ---------- */
+  html.v2-skin-2023 .btn {
+    background: var(--sheet);
+    color: var(--ink);
+    border: 2px solid var(--ot-rule);
+    border-radius: 0;
+    box-shadow: 2px 2px 0 var(--ot-shadow);
+  }
+  html.v2-skin-2023 .btn:hover:not([disabled]) { background: var(--sheet-2); border-color: var(--accent); }
+  html.v2-skin-2023 .btn:active:not([disabled]) { box-shadow: none; transform: translate(1px, 1px); }
+  html.v2-skin-2023 .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+  }
+  html.v2-skin-2023 .btn.primary:hover:not([disabled]) { background: var(--accent); border-color: var(--ot-rule); }
+  html.v2-skin-2023 .btn.ghost { background: transparent; }
+  html.v2-skin-2023 .btn[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+  html.v2-skin-2023 .chip { border-radius: 0; background: var(--sheet); }
+  html.v2-skin-2023 .strip .chip { background: transparent; }
+  html.v2-skin-2023 .panel > h3 .chip { border-color: var(--ot-rule); font-family: var(--mono), var(--body); }
+
+  html.v2-skin-2023 .tabs { border-bottom: 2px solid var(--ot-rule); }
+  html.v2-skin-2023 .tabs button {
+    color: var(--ink-2);
+    border-radius: 0;
+    font-family: var(--mono), var(--body);
+  }
+  html.v2-skin-2023 .tabs button:hover { color: var(--ink); background: var(--sheet-2); }
+  html.v2-skin-2023 .tabs button[aria-selected="true"] {
+    background: var(--ot-rule);
+    color: var(--sheet);
+    border-bottom-color: var(--ot-rule);
+  }
+
+  /* ---------- 실행 항목 경로: 길 위 이정표 카드 ---------- */
+  html.v2-skin-2023 .node {
+    border-radius: 0;
+    border-style: dashed;
+    background: var(--sheet);
+  }
+  html.v2-skin-2023 .node.avail { border-style: solid; box-shadow: 2px 2px 0 var(--ot-shadow); }
+  html.v2-skin-2023 .node.done {
+    border-style: solid;
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: inset 0 0 0 1px var(--accent-ink);
+  }
+  html.v2-skin-2023 .node .v { letter-spacing: 0.02em; }
+
+  /* 표·사건·연관 요소 */
+  html.v2-skin-2023 .plan th,
+  html.v2-skin-2023 .plan td { border-color: var(--line); }
+  html.v2-skin-2023 .plan th { background: var(--sheet-2); font-family: var(--mono), var(--body); }
+  html.v2-skin-2023 .plan tr:first-child th { border-bottom: 2px solid var(--ot-rule); }
+  html.v2-skin-2023 .event { border-radius: 0; border-style: dashed; background: var(--sheet); }
+  html.v2-skin-2023 .event.fired { border-style: solid; background: var(--bad-soft); }
+  html.v2-skin-2023 .event.good { border-style: solid; }
+  html.v2-skin-2023 .wheel div { border-radius: 0; border: 2px solid var(--line); background: var(--sheet); }
+
+  /* 입력: 일지 칸 */
+  html.v2-skin-2023 textarea.note,
+  html.v2-skin-2023 input.note {
+    background: var(--sheet-2);
+    color: var(--ink);
+    border: 2px solid var(--line);
+    border-radius: 0;
+  }
+  html.v2-skin-2023 textarea.note:focus,
+  html.v2-skin-2023 input.note:focus { border-color: var(--accent); }
+  html.v2-skin-2023 .caution { border-radius: 0; }
+
+  /* ---------- 장면: 반전 제목 줄 + 풍경 + 상태 줄 ---------- */
+  html.v2-skin-2023 .v2-stage {
+    --ot-barh: 28px;
+    --ot-stath: 38px;
+    border-radius: 0;
+    border: 2px solid var(--ot-rule);
+    background: var(--ot-status);
+    box-shadow: 4px 4px 0 var(--ot-shadow);
+  }
+  html.v2-skin-2023 .v2-stage-canvas {
+    top: var(--ot-barh);
+    left: 0;
+    width: 100%;
+    height: calc(100% - var(--ot-barh) - var(--ot-stath));
+    image-rendering: pixelated;
+  }
+  html.v2-skin-2023 .v2-stage-top {
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--ot-barh);
+    max-width: none;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 0 10px;
+    background: var(--ot-bar);
+    color: var(--ot-bar-ink);
+    border-bottom: 2px solid var(--ot-rule);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  html.v2-skin-2023 .v2-stage-kicker { color: var(--ot-bar-kicker); font-size: 11px; }
+  html.v2-skin-2023 .v2-stage-title {
+    color: var(--ot-bar-ink);
+    font-family: var(--mono), var(--body);
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  html.v2-skin-2023 .v2-stage-title::after {
+    content: "";
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    margin-left: 6px;
+    vertical-align: -0.12em;
+    background: var(--ot-cursor);
+    animation: v2-2023-blink 1.1s steps(1) infinite;
+  }
+  html.v2-skin-2023 .v2-stage-hud {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: var(--ot-stath);
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: var(--ot-status);
+    border-top: 2px solid var(--ot-rule);
+  }
+  html.v2-skin-2023 .v2-stage-chip {
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 0;
+    background: var(--sheet);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    font-family: var(--mono), var(--body);
+  }
+  html.v2-skin-2023 .v2-stage-chip b { color: var(--ink); font-weight: 700; }
+  html.v2-skin-2023 .v2-stage-chip.tone-warn { border-color: var(--warn); }
+  html.v2-skin-2023 .v2-stage-chip.tone-warn b { color: var(--warn); }
+  html.v2-skin-2023 .v2-stage-chip.tone-bad { border-color: var(--bad); }
+  html.v2-skin-2023 .v2-stage-chip.tone-bad b { color: var(--bad); }
+  html.v2-skin-2023 .v2-stage-broken .v2-stage-canvas { visibility: hidden; }
+}
+
+@keyframes v2-2023-blink { 50% { opacity: 0; } }
+
+@media screen and (max-width: 760px) {
+  html.v2-skin-2023 .v2-stage { --ot-barh: 26px; --ot-stath: 36px; height: 214px; }
+  html.v2-skin-2023 .v2-stage[data-phase="room"],
+  html.v2-skin-2023 .v2-stage[data-phase="reflect"] { height: 150px; }
+  html.v2-skin-2023 .v2-stage-top { gap: 8px; padding: 0 8px; }
+  html.v2-skin-2023 .v2-stage-kicker { display: none; }
+  html.v2-skin-2023 .v2-stage-hud { gap: 4px; padding-inline: 5px; }
+  html.v2-skin-2023 .v2-stage-chip { gap: 4px; padding-inline: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.v2-skin-2023 .v2-stage-title::after { animation: none; }
+  html.v2-skin-2023 .btn:active:not([disabled]) { transform: none; }
+}

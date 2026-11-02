@@ -1,0 +1,13 @@
+# 알려진 실패(기준판: 맥 로컬 통합 검사 18, 작업 줄기 322bc7c).
+# 여기 있는 줄은 검사기가 장면을 만들지 못해 BLOCKED로 끝난 항목이다. 앱 결함으로 확인된 것이 아니며,
+# 같은 줄이 다시 나오면 judge.py는 통과로, 사라지면 '해소' 경고로 보고한다.
+# 칸(탭 하나로 구분): 검사 이름<TAB>실패 줄 전체. 앞뒤 공백은 무시한다. 줄 끝이 *이면 그 앞부분으로 시작하는 줄과 맞춘다.
+# * 앞부분은 FAIL·BLOCKED로 시작해 장면 라벨과 콜론까지 포함한 20자 이상이어야 한다. 기준선 줄 하나는 실패 줄 하나에만 대응한다.
+# 여기 있는 검사는 baseline-counts.txt의 기준 수치(단언 수·종료 코드)도 함께 맞아야 통과다.
+# 고치는 규칙: 사람이 로그를 보고 원인을 확인한 뒤에만 고친다. 고친 커밋 본문에 근거 로그와 이유를 적는다(README 참고).
+rev9	FAIL BLOCKED 390x844-light-down_cleared R13: 390x844-light-down_cleared R13 R13 복원 뒤에도 주제 변경/활성 기준 비영: 지움 조건 미재현
+rev9	FAIL BLOCKED 390x844-dark-down_cleared R13: 390x844-dark-down_cleared R13 R13 복원 뒤에도 주제 변경/활성 기준 비영: 지움 조건 미재현
+rev8c	FAIL BLOCKED 390x844-light-mobile: M5 390에서 세 카드 달 공개 상태를 만들지 못함(1~11월 고정 씨앗)
+rev8c	FAIL BLOCKED 390x844-dark-mobile: M5 390에서 세 카드 달 공개 상태를 만들지 못함(1~11월 고정 씨앗)
+rev8c	FAIL BLOCKED 390x844-light-r2_map_city: R1 2월 아래쪽 지도 칸을 가리킬 수 없음
+rev8c	FAIL BLOCKED 390x844-dark-r2_map_city: R1 2월 아래쪽 지도 칸을 가리킬 수 없음

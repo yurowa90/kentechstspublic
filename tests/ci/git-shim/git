@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# 공개 사본 전용 git 대리. 일부 검사는 `git show <옛 커밋>:<파일>`로 옛 판 소스를 읽어 지금 판과 비교한다.
+# 공개 사본은 새 이력이라 그 커밋이 없으므로, tests/ci/git-fixtures/<커밋>/<파일> 사본을 내준다.
+# 사본이 없거나 다른 git 명령이면 진짜 git을 그대로 부른다. 쓰는 법: 이 폴더를 PATH 맨 앞에 둔다.
+self_dir=$(cd "$(dirname "$0")" && pwd)
+real=""
+IFS=: read -r -a dirs <<< "$PATH"
+for d in "${dirs[@]}"; do
+  [ -n "$d" ] || continue
+  [ "$(cd "$d" 2>/dev/null && pwd)" = "$self_dir" ] && continue
+  if [ -x "$d/git" ]; then real="$d/git"; break; fi
+done
+[ -n "$real" ] || { echo "git-shim: 진짜 git을 찾지 못함" >&2; exit 127; }
+if [ "$#" -eq 2 ] && [ "$1" = show ]; then
+  spec=$2
+  ref=${spec%%:*}
+  rel=${spec#*:}
+  if [ "$ref" != "$spec" ] && printf '%s' "$ref" | grep -Eq '^[0-9a-f]{7,40}$'; then
+    fixture="$self_dir/../git-fixtures/$ref/$rel"
+    if [ -f "$fixture" ]; then
+      exec cat "$fixture"
+    fi
+  fi
+fi
+exec "$real" "$@"

@@ -162,6 +162,8 @@ jobs:
           else
             python -m playwright install ${{ steps.browsers.outputs.browsers }}
           fi
+      - name: 옛 커밋 파일 대리 준비
+        run: echo "$GITHUB_WORKSPACE/tests/ci/git-shim" >> "$GITHUB_PATH"
       - name: 브라우저 검사 실행
         # 작업 시간 제한보다 먼저 끊어 판정·보관 단계가 돌 시간을 남긴다.
         timeout-minutes: 70

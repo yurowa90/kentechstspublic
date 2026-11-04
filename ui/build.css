@@ -730,6 +730,18 @@ html.bd-drawer-open .bd-confirm { left: calc((100vw - 354px) / 2); }
   pointer-events: none;
 }
 .bd-toast[data-show="true"] { opacity: 1; transform: translate(-50%, 0); }
+/* rev20 E: 상자·글자는 지도로 누르기를 통과시키고, 보이는 고침 단추만 받는다. */
+.bd-toast[data-actions="true"] { border-radius: 12px; box-sizing: border-box; margin: 0; }
+.bd-toast-msg { display: block; overflow-wrap: anywhere; }
+.bd-toast-acts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.bd-toast-acts[hidden] { display: none; }
+.bd-toast-acts button {
+  min-width: 44px; min-height: 44px; box-sizing: border-box; padding: 4px 10px;
+  border: 1px solid var(--ui-gold); border-radius: 8px; background: var(--ui-panel);
+  color: var(--ui-text); font: inherit; pointer-events: none;
+}
+.bd-toast[data-show="true"] .bd-toast-acts button { pointer-events: auto; }
+.bd-toast-acts button:focus-visible { outline: 2px solid var(--ui-gold); outline-offset: 2px; }
 
 /* ---------- 큰 창 내용 ---------- */
 .bd-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; padding: 0; list-style: none; }

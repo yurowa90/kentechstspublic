@@ -192,7 +192,9 @@ def main():
                     # 명세 B1: 결과 서랍 자동 열림은 학생의 S6 행동이 아니다.
                     assert page.evaluate(STEP_JS) == 6, '결과 자동 열림 뒤 6/8 유지'
                 elif step == 6:
-                    assert '운영 끝 · 결과 맨 위에서 내 예측과 실제를 비교해요' in frame['task']
+                    # rev20 A2(#93): 코치가 판정 줄 위치('숫자 칸 아래 '{주제} 예측' 줄')를 가리킨다.
+                    topic = page.evaluate("() => (document.querySelector('#lg-promise-summary')?.textContent || '').split(' 예측:')[0].trim()")
+                    assert f"운영 끝 · 숫자 칸 아래 '{topic} 예측' 줄에서 내 예측과 실제를 비교해요" in frame['task'], frame['task']
                     press("#lg-coach-action", step)
                     page.wait_for_function("() => Number(document.querySelector('#lg-coach')?.dataset.step) === 7")
                 elif step == 7:

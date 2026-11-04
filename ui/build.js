@@ -19,6 +19,11 @@
     C6: "{d}일 운영 끝. 정전 {h}시간, 총비용 {c}억, CO₂ 소비(계통 포함) {n} t."
   };
   const rev11Copy = (key, values = {}) => REV11_COPY[key].replace(/\{([^{}]+)\}/g, (_, name) => values[name] ?? "");
+  const REV20_COPY = {
+    E1: "철거 도구",
+    E2: "철거 도구: 지도에서 지은 것을 누르면 철거하고 돈을 돌려받아요",
+    E3: "되돌리기: 방금 놓은 것을 되돌리고 돈을 모두 돌려받아요"
+  };
   const html = document.documentElement;
   const KEY = "kcp-build-v1";
   const TRIAL_KEY = "kcp-build-trial-v1";
@@ -2702,6 +2707,7 @@
     request();
   }
   function changed(msg) {
+    closeActionToast();
     persist();
     if (S.opts.onChange) S.opts.onChange(S.st);
     S.net = network(S.st);
@@ -2723,7 +2729,12 @@
   function place(type, i) {
     if (toolLocked(type)) { toast(toolLocked(type)); return; }
     const chk = canPlace(type, i);
-    if (!chk.ok) { markBuildSite(type, i); toast(placementReason(type, i, chk)); return; }
+    if (!chk.ok) {
+      markBuildSite(type, i);
+      // canPlace에서 비용을 담은 거절은 예산 부족뿐이다. 입지 거절 문구·경로는 유지한다.
+      toast(placementReason(type, i, chk), Number.isFinite(chk.cost) ? { actions: true } : undefined);
+      return;
+    }
     S.siteHint = null;
     const item = { t: type, i };
     S.st.builds.push(item);
@@ -2827,7 +2838,7 @@
     const P = S.pending;
     if (!P) return;
     const plan = { ...S.st, lines: [...S.st.lines, { p: P.p }] };
-    if (!withinBudget(plan)) { toast(budgetShortfall(plan, P.cost, "송전선", 1)); return; }
+    if (!withinBudget(plan)) { toast(budgetShortfall(plan, P.cost, "송전선", 1), { actions: true }); return; }
     const item = { p: P.p };
     S.st.lines.push(item);
     S.undo.push({ kind: "l", item, st: S.st, turn: undoTurn() });
@@ -2993,6 +3004,7 @@
   }
   function switchMap(id) {
     if (!S || S.run || id === PK.id || !Object.hasOwn(PACKS, id)) return;
+    closeActionToast();
     S.doc.map = id;
     selectPack(id);
     S.st = S.doc.maps[id];
@@ -3133,6 +3145,7 @@
       toast("미션 2개를 먼저 고르세요");
       return;
     }
+    closeActionToast();
     cancelLine();
     hideTip();
     S.hover = null;
@@ -3559,7 +3572,13 @@
   KCP.buildGame.coachMarks = coachMarks;
   function placeBanners() {
     if (!S.banners) return;
-    const key = `${V.ox.toFixed(1)},${V.oy.toFixed(1)},${V.S.toFixed(2)},${V.rot},${V.W},${V.H},${V.area.l},${V.area.t},${V.area.r},${V.area.b}`;
+    // 코치 표지는 지도 위에 떠 있는 안내 묶음·코치 밑에 깔리지 않게 그 아래끝을 세로 하한으로 쓴다(rev10 R8).
+    // 좁은 화면은 지도를 더 내릴 여유가 없어 지도 이동만으로는 피할 수 없다.
+    let floor = V.area.t;
+    if (S.coachLabels?.length) S.root.querySelectorAll(".lg-map-guidance, #lg-coach").forEach(el => {
+      if (!el.hidden && el.getClientRects().length) floor = Math.max(floor, el.getBoundingClientRect().bottom + 4);
+    });
+    const key = `${V.ox.toFixed(1)},${V.oy.toFixed(1)},${V.S.toFixed(2)},${V.rot},${V.W},${V.H},${V.area.l},${V.area.t},${V.area.r},${V.area.b},${floor.toFixed(1)}`;
     if (S.bannerKey === key) return;
     S.bannerKey = key;
     const placed = [];
@@ -3575,7 +3594,7 @@
       const w = el.offsetWidth, h = el.offsetHeight, gap = V.S * 0.6 + 6;
       // 코치 표지는 지도 영역(V.area: 서랍·아래 막대를 뺀 곳) 안에서만 자른다(검토 minor 8).
       const rect = (bx, by) => ({ x: clamp(bx, V.area.l + 4, Math.max(V.area.l + 4, V.area.r - w - 4)),
-        y: clamp(by, V.area.t, Math.max(V.area.t, V.area.b - h - 4)), w, h });
+        y: clamp(by, floor, Math.max(floor, V.area.b - h - 4)), w, h });
       const options = [rect(x + gap, y - h / 2), rect(x - gap - w, y - h / 2),
         rect(x - w / 2, y - gap - h), rect(x - w / 2, y + gap)];
       // 가장자리에서도 두 이름이 겹치지 않도록 앞 표지의 위·아래 자리까지 후보로 쓴다.
@@ -3807,12 +3826,12 @@
     // 새로 열린 말풍선만 단계 알림을 닫는다. 칸 이동·배치 실패 뒤 갱신은 피드백을 보존한다.
     if (opening && S.opts.league) {
       const toastEl = $("#bd-toast");
-      const shownPhase = !!toastEl?.dataset.phase && toastEl.dataset.warn !== "true";
+      const shownPhase = !!toastEl?.dataset.phase && toastEl.dataset.warn !== "true" && toastEl.dataset.actions !== "true";
       const pendingPhase = S.toastPending?.opts?.phase && !S.toastPending.opts.warn;
       if (shownPhase) { toastEl.dataset.show = "false"; syncResultToastPosition(); }
       if (pendingPhase || shownPhase && !S.toastPending) { clearTimeout(toastTimer); S.toastPending = null; }
       // 대기하던 단계 알림을 버리면, 그 대기 때문에 닫기 타이머를 잃은 피드백 알림을 원래 수명(2.2초) 뒤 닫는다(rev11 검토 minor).
-      if (pendingPhase && !shownPhase && toastEl?.dataset.show === "true" && toastEl.dataset.warn !== "true") {
+      if (pendingPhase && !shownPhase && toastEl?.dataset.show === "true" && toastEl.dataset.warn !== "true" && toastEl.dataset.actions !== "true") {
         const state = S, shownSeq = toastEl.dataset.toastSeq;
         const remaining = Math.max(0, Number(toastEl.dataset.toastShownAt) + 2200 - Date.now());
         S.timers.push(setTimeout(() => { if (S === state && S.alive && !S.toastPending && toastEl.dataset.toastSeq === shownSeq && !toastEl.dataset.phase) toastEl.dataset.show = "false"; }, remaining));
@@ -3853,6 +3872,7 @@
     if (S) S.toastPositionRaf = 0;
   }
   function syncPlanToastPosition(el) {
+    if (el.dataset.actions === "true") { syncActionToastPosition(el); return; }
     delete el.dataset.planOverlap;
     delete el.dataset.planWidth;
     el.style.removeProperty("--lg-plan-toast-width");
@@ -3876,6 +3896,47 @@
       }
     }
     if (toastRect && drawers.some(r => intersects(toastRect, r))) el.dataset.planOverlap = "true";
+  }
+  // rev20 개정 E-1: 고침 단추는 숨기지 않고, 안내 아래에서 서랍·조작을 피하는 자리를 찾는다.
+  function syncActionToastPosition(el) {
+    delete el.dataset.planOverlap;
+    delete el.dataset.planWidth;
+    delete el.dataset.actionPosition;
+    el.style.removeProperty("--lg-plan-toast-width");
+    const rect = node => {
+      if (!node || node.hidden || !node.getClientRects().length || getComputedStyle(node).visibility === "hidden") return null;
+      const r = node.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && r.right > 0 && r.left < innerWidth && r.bottom > 0 && r.top < innerHeight ? r : null;
+    };
+    const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    const preferred = rect(el);
+    if (!preferred) return;
+    // 폰의 전폭 서랍은 알림 아래부터 시작한다. 도크까지 내려 알림을 겹쳐 놓지 않는다.
+    const slotBottom = `${Math.ceil(preferred.bottom + 8)}px`;
+    if (S.root.style.getPropertyValue("--lg-action-toast-bottom") !== slotBottom) S.root.style.setProperty("--lg-action-toast-bottom", slotBottom);
+    const obstacles = [...S.root.querySelectorAll('#bd-hud, #lg-bar, #bd-mapbar, .lg-map-guidance, #bd-dock, #bd-subtools, #bd-seasons, [data-run], #lg-coach button, #lg-panel, #bd-drawer, #lg-panel-fold, [data-pclose], #bd-drawer-x')].map(rect).filter(Boolean);
+    // 먼저 원래 폭을 쓴다. 안 맞으면 서랍 왼쪽 빈 폭(최소 200px)으로 줄여 다시 잰다.
+    const drawers = [rect(S.root.querySelector("#lg-panel")), rect(S.root.querySelector("#bd-drawer"))].filter(Boolean);
+    const widths = [preferred.width, ...drawers.map(r => Math.floor(r.left - 16)).filter(w => w >= 200 && w < preferred.width)];
+    for (const width of widths) {
+      el.style.setProperty("--lg-plan-toast-width", `${width}px`);
+      el.dataset.planWidth = "true";
+      const t = rect(el);
+      if (!t) continue;
+      const xs = [...new Set([preferred.left, 8, innerWidth - t.width - 8, ...obstacles.flatMap(r => [r.left - t.width - 8, r.right + 8])].map(Math.round))];
+      const ys = [...new Set([preferred.top, 8, innerHeight - t.height - 8, ...obstacles.flatMap(r => [r.top - t.height - 8, r.bottom + 8])].map(Math.round))];
+      const positions = xs.flatMap(left => ys.map(top => ({ left, top, right: left + t.width, bottom: top + t.height })))
+        .filter(p => p.left >= 8 && p.right <= innerWidth - 8 && p.top >= 8 && p.bottom <= innerHeight - 8 && obstacles.every(r => !intersects(p, r)))
+        .sort((a, b) => Math.abs(a.left - preferred.left) + Math.abs(a.top - preferred.top) - Math.abs(b.left - preferred.left) - Math.abs(b.top - preferred.top));
+      if (positions[0]) {
+        el.style.setProperty("--lg-action-toast-left", `${positions[0].left}px`);
+        el.style.setProperty("--lg-action-toast-top", `${positions[0].top}px`);
+        el.dataset.actionPosition = "true";
+        return;
+      }
+    }
+    // 빈 자리가 없는 작은 창에서도 문장·단추 자체를 숨기지는 않는다.
+    delete el.dataset.planWidth;
   }
   function syncResultToastPosition() {
     if (!S?.alive || !S.opts.league) { stopResultToastPosition(); return; }
@@ -3958,6 +4019,26 @@
   // 경고 토스트(opts.warn)가 떠 있는 동안에는 일반 토스트가 덮지 못한다: 같은 동작 안의 '결과가 나왔어요'가
   // 저장 실패 경고를 75ms 만에 지우던 문제(2026-10-20 재현).
   let toastWarnUntil = 0;
+  function closeActionToast() {
+    S?.toastActionObserver?.disconnect();
+    if (S) S.toastActionObserver = null;
+    const el = $("#bd-toast");
+    if (el?.dataset.actions !== "true") return;
+    clearTimeout(S.toastActionTimer);
+    S.toastActionTimer = 0;
+    el.dataset.show = "false";
+    el.dataset.actions = "false";
+    delete el.dataset.actionPosition;
+    S.root.style.removeProperty("--lg-action-toast-bottom");
+    el.querySelector(".bd-toast-acts").hidden = true;
+    syncResultToastPosition();
+  }
+  function focusToastTool(e, undo) {
+    // 키보드가 만든 click만 복구한다. 도구 갱신으로 바뀐 DOM에서 다시 찾는다(E-3).
+    if (e.detail !== 0) return;
+    const button = undo && $("#bd-undo:not(:disabled)") || $('#bd-tools [data-tool="remove"]:not(:disabled)');
+    button?.focus({ preventScroll: true });
+  }
   // 결과 공개 카드만 알림을 미룬다. 계획 단계 예보 카드와 '계획 시작' 알림은 기존 계약대로 함께 보이며 서로 겹치지 않게 배치된다(score1 F9).
   const toastBlocked = () => S.opts.league && S.root.querySelector('.fx-turn-layer:not([hidden]):not([data-strip="true"]) .fx-turn-card-row:not([hidden]) article:not([data-forecast="true"])');
   function toast(msg, opts) {
@@ -3976,14 +4057,35 @@
       toastTimer = setTimeout(() => { if (S === state && S.alive) toast(msg, opts); }, 150);
       return;
     }
+    closeActionToast();
     S.toastPending = null;
     if (warn) toastWarnUntil = now + 2200;
-    el.textContent = msg;
+    const actions = [];
+    if (opts?.actions && !S.run && !lockedMsg()) {
+      if (lastUndo()) actions.push(`<button type="button" id="bd-toast-undo" aria-label="${esc(REV20_COPY.E3)}">${esc("되돌리기")}</button>`);
+      if (toolsOf().includes("remove") && !toolLocked("remove")) actions.push(`<button type="button" id="bd-toast-remove" aria-label="${esc(REV20_COPY.E2)}">${esc(REV20_COPY.E1)}</button>`);
+    }
+    if (actions.length) {
+      el.innerHTML = `<span class="bd-toast-msg">${esc(msg)}</span><span class="bd-toast-acts">${actions.join("")}</span>`;
+      el.querySelector("#bd-toast-undo")?.addEventListener("click", e => { closeActionToast(); undoPlacement(); focusToastTool(e, true); });
+      el.querySelector("#bd-toast-remove")?.addEventListener("click", e => {
+        closeActionToast();
+        if (toolsOf().includes("remove") && !toolLocked("remove") && !lockedMsg() && !S.run && S.tool !== "remove") setTool("remove");
+        focusToastTool(e, false);
+      });
+      if (S.opts.league) {
+        const phase = S.root.dataset.lgPhase;
+        S.toastActionObserver = new MutationObserver(() => { if (S.root.dataset.lgPhase !== phase) closeActionToast(); });
+        S.toastActionObserver.observe(S.root, { attributes: true, attributeFilter: ["data-lg-phase"] });
+      }
+    } else el.textContent = msg;
+    el.dataset.actions = String(!!actions.length);
     el.dataset.toastSeq = String(seq);
     el.dataset.toastShownAt = String(now);
     el.dataset.show = "true";
     el.dataset.warn = String(warn);
     if (opts?.phase) el.dataset.phase = opts.phase;
+    else if (actions.length && S.opts.league) el.dataset.phase = "plan";
     else delete el.dataset.phase;
     delete el.dataset.clearKeys;
     delete el.dataset.clearPanel;
@@ -3996,14 +4098,18 @@
     // 수명 절반(1.1초) 때 카드에 가려져 있었는지 기록한다. 이미 절반 넘게 보인 알림은 카드가 닫힌 뒤 다시 띄우지 않는다.
     let hiddenEarly = false;
     S.timers.push(setTimeout(() => { if (S === state && S.alive && el.dataset.toastSeq === String(seq)) hiddenEarly = !warn && !!toastBlocked(); }, 1100));
-    toastTimer = setTimeout(() => {
+    const lifetimeTimer = setTimeout(() => {
       if (S !== state || !S.alive || el.dataset.toastSeq !== String(seq)) return;
+      if (actions.length) { closeActionToast(); return; }
       // 단계 알림이 먼저 뜬 뒤 곧바로 카드가 열린 경우만 보류해 카드가 닫힌 뒤 다시 보인다.
       if (!warn && hiddenEarly && toastBlocked()) { toast(msg, opts); return; }
       const e2 = $("#bd-toast"); if (e2) e2.dataset.show = "false";
       syncResultToastPosition();
-    }, 2200);
-    S.timers.push(toastTimer);
+    }, actions.length ? 10000 : 2200);
+    // E-2: 보류 알림의 150ms 재시도(toastTimer)와 고침 알림 수명은 별개다.
+    if (actions.length) S.toastActionTimer = lifetimeTimer;
+    else toastTimer = lifetimeTimer;
+    S.timers.push(lifetimeTimer);
   }
   function announce(msg) { const el = $("#bd-live"); if (el) el.textContent = msg; }
   function updateAria() {
@@ -4460,6 +4566,7 @@
    * ===================================================================== */
   function teardown() {
     if (!S) return;
+    closeActionToast();
     const root = S.root, replayDone = S.run?.replay ? S.run.opts.onDone : null;
     S.run = null;
     S.mapFx = []; S.flowView = null;

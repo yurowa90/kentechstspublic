@@ -53,7 +53,8 @@ C_COACH_FOCUS = 2  # 1024 계획 별도 장면: 코치 내부 Esc1 코치 닫힘
 # =21 추가(공통3 포함 24).
 D_BODY = {1280: 6, 1024: 24, 390: 24}
 # 개정 2의 ac00869 실측. 현재 UI에서 기대값을 역산하지 않는다.
-D_BASELINE = {1280: {'controls': 38, 'chars': 906},
+# rev20 M(#93): 1280 계획에서 범례가 접히며 '! 범례·여유' 단추 하나(조작 +1, 글자 '! 범례·여유' +7)가 보인다(맥 로컬 실측 39·913).
+D_BASELINE = {1280: {'controls': 39, 'chars': 913},
               1024: {'controls': 40, 'chars': 821},
               390: {'controls': 39, 'chars': 633}}
 MINIMUM_BY_WIDTH = {
@@ -449,8 +450,8 @@ def D(checks, page, base, width, fixture):
     checks.ok(view['overflow'] <= 0, f'D {width} 코치 1/8 가로 넘침0')
     baseline = D_BASELINE[width]
     if width == 1280:
-        checks.ok(scene['controls'] == baseline['controls'], 'D 1280 보이는 조작 수 =38')
-        checks.ok(scene['chars'] == baseline['chars'], 'D 1280 보이는 글자 수 =906')
+        checks.ok(scene['controls'] == baseline['controls'], 'D 1280 보이는 조작 수 =39(rev20 M)')
+        checks.ok(scene['chars'] == baseline['chars'], 'D 1280 보이는 글자 수 =913(rev20 M)')
     else:
         checks.ok(scene['controls'] <= baseline['controls'] - 1,
                   f'D {width} 보이는 조작 수 ≤{baseline["controls"] - 1}')
@@ -459,7 +460,8 @@ def D(checks, page, base, width, fixture):
     if width == 1280:
         checks.ok(view['folds'] == 0, 'D 1280 접힌 단추 없음/숨김')
         checks.ok(chips_match(view, expected), 'D 1280 기준판 칩 그대로 보임')
-        checks.ok(not view['legend']['visible'], 'D 1280 기준판 범례 규칙(접힌 범례 단추 숨김)')
+        # rev20 M(#93): 코치 중 범례 단추 숨김(rev18 R5)은 ≤1100px에만 남고, 1280은 접은 범례의 단추가 보인다.
+        checks.ok(view['legend']['visible'], 'D 1280 rev20 M 범례 접힘 단추 보임')
         return
     # ac00869의 planIssues/계획 확인 규칙: supplyMW==0이면 supply 경고가 있다.
     # 공개 계획과 실제 칩이 없는 장면으로 보존 검사를 통과시키지 않는다.

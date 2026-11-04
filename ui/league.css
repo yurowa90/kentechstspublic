@@ -1082,7 +1082,7 @@ abbr.lg-term { text-decoration: underline dotted; cursor: help; }
 .lg-map-key-info > summary.lg-info-btn { display: flex; gap: 4px; width: auto; min-width: 44px; min-height: 44px; padding: 0 10px; border: 1px solid var(--ui-border); border-radius: 10px; background: var(--ui-panel); font-family: var(--body); }
 .lg-map-key-info > summary.lg-info-btn::after { content: none; }
 .lg-map-key-info .lg-info-pop { position: absolute; left: 0; bottom: calc(100% + 8px); width: min(420px, calc(100vw - 16px)); max-width: calc(100vw - 16px); max-height: max(44px, calc(100dvh - var(--bd-dock, 112px) - var(--lg-run-height, 0px) - var(--lg-guidance-bottom, var(--lg-mapbar-bottom, 210px)) - 80px)); overflow-y: auto; overscroll-behavior: contain; box-shadow: var(--ui-shadow); }
-.lg-map-key-info .lg-info-pop > :is(.lg-town-key, .lg-lens-grid) { position: static; max-width: 100%; margin: 0; }
+.lg-map-key-info .lg-info-pop > :is(.lg-town-key, .lg-lens-grid) { position: static; top: auto; bottom: auto; max-width: 100%; margin: 0; }
 .lg-map-key-info .lg-info-pop > .lg-town-key { border: 0; padding: 0; }
 .lg-map-key-info .lg-info-pop > .lg-lens-grid { padding: 8px 0 0; }
 .lg-team-map.bd-replaying .lg-map-key-info { display: none; }
@@ -1096,6 +1096,18 @@ abbr.lg-term { text-decoration: underline dotted; cursor: help; }
   .lg-team-map .bd-tools, .lg-team-map .bd-runs { padding: 2px; }
   .lg-team-map .bd-tools > .bd-tool { padding: 2px 0; gap: 0; line-height: 1.1; }
   .lg-team-map .bd-layers, .lg-team-map .bd-zoom { padding: 0; }
+}
+
+/* rev20 D: 여섯 도구 칸은 44px 이상, 마지막 되돌리기는 한 낱말(14px × 4자) 여유를 둔다. */
+@media (max-width: 480px) {
+  #bd-root.lg-team-map #bd-tools { grid-template-columns: repeat(6, minmax(44px, 1fr)) 60px; }
+  .lg-team-map #bd-tools .bd-tool-n,
+  .lg-team-map #bd-undo > span,
+  .lg-team-map #bd-subtools .bd-tool-n {
+    font-size: 14px; max-width: 100%; min-width: 0; white-space: normal;
+    word-break: keep-all; overflow-wrap: normal;
+  }
+  .lg-team-map #bd-subtools .bd-tool { min-width: 0; width: 100%; box-sizing: border-box; }
 }
 
 /* 월 목표는 숫자·확정 시점·근거를 같은 줄 흐름에서 읽고 작은 화면에서는 줄바꿈한다. */
@@ -1474,6 +1486,17 @@ html.v2-league-lobby #lg-solo .lg-launch { margin-top: 0; padding-top: 0; border
   .fx-turn-layer[data-auto-deck="true"] .fx-turn-face { gap: 6px; }
   .fx-turn-layer[data-auto-deck="true"] .fx-turn-card h3 { font-size: 18px; }
 }
+
+/* rev20 A3: 태블릿 결과의 안내는 서랍 왼쪽에, 본문은 머리 바로 아래부터.
+   1280 배치와 제목 → 숫자 → 판정의 DOM 순서는 그대로 둔다. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  #bd-root.lg-team-map[data-lg-phase="review"][data-league-drawer="true"]:has(#lg-coach) .lg-map-guidance {
+    right: calc(var(--lg-drawer-width, calc(50vw - 12px)) + 16px);
+  }
+  #bd-root.lg-team-map[data-lg-phase="review"][data-league-drawer="true"]:has(#lg-coach) #lg-panel {
+    top: var(--bd-top, 180px);
+  }
+}
 /* 좁은 덧층: 카드 수에 따른 :has 열 규칙(특이성 0,4,0)을 같은 특이성으로 뒤에서 덮어 한 장씩 보인다. */
 .fx-turn-layer[data-compact="true"] .fx-turn-card-row:has(.fx-turn-card) { width: min(100%, 360px); max-width: 360px; grid-template-columns: minmax(0, 1fr); }
 .fx-turn-layer[data-compact="true"] .fx-turn-card { grid-area: 1 / 1; padding: 12px; gap: 6px; }
@@ -1590,9 +1613,18 @@ html.v2-still #bd-hud :is(.fx-flash-up, .fx-flash-down) :is(.v2-cap-k, .v2-cap-v
   .lg-map-guidance .lg-map-result { font-size: 12px; padding: 6px 8px; }
   /* 폰 결과 서랍(폭 360) 뒤로 다 들어가게 같은 폭으로 줄인다. */
   .lg-town-key { max-width: min(360px, calc(100vw - 16px)); background: rgba(10, 25, 42, .88); font-size: 11px; padding: 4px 8px; }
-  .lg-map-guidance #lg-coach { font-size: 12px; padding: 3px; }
-  .lg-map-guidance #lg-coach button,
+  .lg-team-map .lg-map-guidance #lg-coach { font-size: 14px; padding: 3px; }
+  .lg-team-map .lg-map-guidance #lg-coach button { font-size: 14px; padding-inline: 4px; }
   .lg-map-guidance #lg-plan-issues button { font-size: 12px; padding-inline: 4px; }
+  /* rev20 A3·D: 커진 코치 아래 첫 화면은 카드 여백만 줄여 판정 단추 자리를 확보한다. */
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-result-deltas { margin-block: 6px; }
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-result-deltas > div { padding-block: 6px; }
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-promise-summary { padding: 6px 8px; }
+  /* 판정 문장은 주제·결과 값에 따라 한 줄 더 감긴다(기준판도 '−0.2%p'·현금 문장에서 7px 넘침).
+     서랍 머리·본문 위·단추 위 여백을 줄여 세 줄 판정도 첫 화면에 들어가게 한다. 단추 44px은 그대로. */
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-panel .lg-ptabs { padding-block: 4px; }
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-panel .lg-pbody { padding-top: 6px; }
+  #bd-root.lg-team-map[data-lg-phase="review"]:has(#lg-coach) #lg-promise-summary button { margin-top: 0; }
 }
 
 /* 설명은 문서 흐름에서 아래로 펼친다. 22px 원 + 투명 여백으로 44px 누름 영역을 확보한다. */
@@ -1914,14 +1946,21 @@ html.v2-league-host #lg-next { font-size: 16px; }
 }
 #app #bd-root.lg-team-map #bd-toast[data-phase="plan"][data-show="true"] { transform: translate(0, 0); }
 @media (max-width: 760px) {
-  #app #bd-root.lg-team-map:has(#lg-panel:not([hidden])) #bd-toast[data-phase="plan"],
-  html.bd-drawer-open #app #bd-root.lg-team-map #bd-toast[data-phase="plan"] {
+  #app #bd-root.lg-team-map:has(#lg-panel:not([hidden])) #bd-toast[data-phase="plan"]:not([data-actions="true"]),
+  html.bd-drawer-open #app #bd-root.lg-team-map #bd-toast[data-phase="plan"]:not([data-actions="true"]) {
     top: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     left: 8px; right: 8px; width: auto; max-width: none;
   }
+  /* rev20 개정 E-1: 고침 알림 자리를 서랍 위에 확보하고 머리 단추도 그 아래로 옮긴다. */
+  #bd-root.lg-team-map:has(#bd-toast[data-actions="true"][data-show="true"]) :is(#lg-panel, #bd-drawer) {
+    top: max(var(--bd-top, 180px), var(--lg-guidance-bottom, 0px), var(--lg-action-toast-bottom, 0px));
+  }
 }
-#app #bd-root.lg-team-map #bd-toast[data-phase="plan"][data-plan-overlap="true"] { visibility: hidden; }
+#app #bd-root.lg-team-map #bd-toast[data-phase="plan"][data-plan-overlap="true"]:not([data-actions="true"]) { visibility: hidden; }
 #app #bd-root.lg-team-map #bd-toast[data-phase="plan"][data-plan-width] { max-width: var(--lg-plan-toast-width); }
+#app #bd-root.lg-team-map #bd-toast[data-phase="plan"][data-actions="true"][data-action-position="true"] {
+  left: var(--lg-action-toast-left); top: var(--lg-action-toast-top); right: auto; bottom: auto;
+}
 /* Q6b: 충돌할 때만 build의 실측 배치가 top을 정한다. 계획 알림과 기존 가로 위치는 유지한다. */
 #app #bd-root.lg-team-map #bd-toast[data-phase="result"][data-clear-keys="true"] { top: var(--lg-result-toast-top); bottom: auto; }
 /* rev13 R1: 넓은 화면에서 옆 서랍이 열려 있으면 서랍 왼쪽 빈 자리로(가로 위치만, 미끄러짐 없이 한 번에). */

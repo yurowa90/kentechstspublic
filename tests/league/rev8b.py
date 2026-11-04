@@ -318,8 +318,10 @@ class Case:
         self.press('#lg-ready')
         p.wait_for_function(RESULT_DONE_JS, timeout=180000)
         self.step(6)
-        self.check('운영 끝 · 결과 맨 위에서 내 예측과 실제를 비교해요' in
-                   p.locator('#lg-coach-task').inner_text(), 'B1 C-B1 결과 맨 위 비교 안내')
+        # rev20 A2(#93): '결과 맨 위' 대신 판정 줄 위치('숫자 칸 아래 '{주제} 예측' 줄')를 가리킨다.
+        topic = p.evaluate("() => (document.querySelector('#lg-promise-summary')?.textContent || '').split(' 예측:')[0].trim()")
+        self.check(f"운영 끝 · 숫자 칸 아래 '{topic} 예측' 줄에서 내 예측과 실제를 비교해요" in
+                   p.locator('#lg-coach-task').inner_text(), 'B1 C-B1 판정 줄 위치 비교 안내')
         samples = p.evaluate("""async () => {
           const values=[], until=performance.now()+3000;
           do { values.push(Number(document.querySelector('#lg-coach')?.dataset.step || 0));

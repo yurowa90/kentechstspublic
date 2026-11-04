@@ -8,7 +8,10 @@ from playwright.sync_api import expect
 
 @contextmanager
 def map_key_visible(page, selector):
-    """rev12 Q2: ≤1100px 계획에서만 같은 범례 줄을 펼쳐 검사하고 접힘을 복원한다.
+    """rev12 Q2·rev20 M(#93): 범례 줄이 '! 범례·여유' 상자 안으로 접혀 있으면 펼쳐 검사하고 접힘을 복원한다.
+
+    rev20 M부터 접힘은 폭·단계 조합(≤1100px 계획, >1100px 계획·결과)으로 정해지므로 폭 조건 대신
+    줄이 실제로 상자(#lg-map-key-info) 안에 있는지로 판정한다.
 
     경고 접속 여유는 열지 않는다. 이때 기존 visible 단언이 상자 밖 표시를 검증한다.
     <summary>는 button role 대신 명세 K1a 속성으로 찾는다.
@@ -16,11 +19,10 @@ def map_key_visible(page, selector):
     if selector not in ('#lg-lens-grid', '#bd-town-look-key'):
         yield
         return
-    planning = page.evaluate("""() => { const L=KCP.league.state();
-      return (L.S || L.snap)?.phase === 'plan'; }""")
     node = page.locator(selector)
+    folded = node.evaluate("e => !!e.closest('#lg-map-key-info')")
     opened, previous_focus = None, None
-    if (page.viewport_size['width'] <= 1100 and planning and
+    if (folded and
             not (selector == '#lg-lens-grid' and node.get_attribute('data-warn') == 'true')):
         toggle = page.locator('[aria-label="범례·여유: 지도 범례와 접속 여유 보기"]')
         expect(toggle).to_be_visible()

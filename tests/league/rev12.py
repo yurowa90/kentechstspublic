@@ -124,10 +124,13 @@ def legend_overlap(checks, page, label, required=()):
       const coachFolded=visible(coach)&&!siteJudgment&&
         !!document.querySelector('#bd-root[data-lg-phase="plan"]')&&!keep;
       const shown=visible(toggle),r=shown?box(toggle):null;
-      return {shown,narrow,coachFolded,rows:['#bd-dock','#lg-coach','[data-run]','#bd-run'].map(selector=>({selector,
+      const phase=document.querySelector('#bd-root')?.dataset.lgPhase||'';
+      return {shown,narrow,coachFolded,phase,rows:['#bd-dock','#lg-coach','[data-run]','#bd-run'].map(selector=>({selector,
         areas:[...document.querySelectorAll(selector)].filter(visible).map(e=>area(r,box(e)))}))};
     }""")
-    expected_shown = data['narrow'] and not data['coachFolded']
+    # rev20 M(#93): 1101px 이상도 계획·결과 단계에서 범례를 '!' 상자에 접는다(코치 중 숨김은 ≤1100px만).
+    expected_shown = (data['narrow'] and not data['coachFolded']) or \
+        (not data['narrow'] and data['phase'] in ('plan', 'review'))
     checks.ok(data['shown'] == expected_shown, label + ' Q2 폭별 ! 표시')
     if expected_shown:
         hit(checks, page.locator(f'[aria-label="{K1A}"]'), label + ' Q2 ! 겹침 장면')
@@ -143,6 +146,8 @@ def legend_overlap(checks, page, label, required=()):
 def legend(checks, page, label, touch):
     grid_on(page, touch)
     narrow = page.viewport_size['width'] <= 1100
+    # rev20 M(#93): 이 장면은 계획 단계라 모든 폭에서 접힌다. 옛 '1280 펼침' 단언을 접힘 단언으로 바꾼다.
+    folded = narrow or page.evaluate("() => ['plan','review'].includes(document.querySelector('#bd-root')?.dataset.lgPhase)")
     # <summary>는 Chromium 접근성 트리에서 button role이 아니므로 접근 이름 속성으로 찾는다.
     toggle = page.locator(f'[aria-label="{K1A}"]')
     town = page.locator('#bd-town-look-key')
@@ -150,7 +155,7 @@ def legend(checks, page, label, touch):
     original_town = town.text_content().strip()
     original_grid = grid.text_content().strip()
     legend_overlap(checks, page, label, required=('#bd-dock', '[data-run]'))
-    if not narrow:
+    if not folded:
         checks.ok(shown(page, '#bd-town-look-key'), label + ' Q2 1280 범례 각주 펼침')
         checks.ok(shown(page, '#lg-lens-grid'), label + ' Q2 1280 접속 여유 펼침')
         checks.ok(toggle.count() == 0 or not toggle.is_visible(), label + ' Q2 1280 접기 단추 숨김')
@@ -177,7 +182,7 @@ def legend(checks, page, label, touch):
     checks.ok(town.count() == 1 and grid.count() == 1, label + ' Q2 기존 두 줄 중복 없음')
     overflow(checks, page, label + ' Q2 상자 펼침')
     checks.shot(page, label + '-legend')
-    if narrow:
+    if folded:
         toggle.tap() if touch else toggle.click()
         frames(page)
         checks.ok(not town.is_visible(), label + ' Q2 다시 누르면 닫힘')
@@ -291,8 +296,12 @@ def result_toast(checks, page, label):
     samples = page.evaluate('() => __rev12.results')
     checks.ok(bool(samples), label + ' Q6(b) 실제 운영 결과 알림 관측 (1주 시험 제외)')
     targets = [row for sample in samples for row in sample['targets']]
-    checks.ok(bool(targets), label + ' Q6(b) 알림과 동시에 보이는 접속 여유 또는 ! 있음')
-    checks.ok(bool(targets) and all(row['overlap'] == 0 for row in targets),
+    # rev20 M(#93): 1101px 이상 결과 단계는 접속 여유 줄이 '!' 상자 안에 접히고, 그 상자는 재생 중 숨는다(rev11 R8 그대로).
+    # 그래서 결과 알림과 함께 보이는 대상이 없을 수 있다. 이때는 겹칠 대상이 없음을 확인하고, 보이는 대상이 있으면 겹침 0을 요구한다.
+    folded_wide = page.viewport_size['width'] > 1100 and page.evaluate(
+        "() => !!document.querySelector('#lg-lens-grid')?.closest('#lg-map-key-info')")
+    checks.ok(bool(targets) or folded_wide, label + ' Q6(b) 알림과 동시에 보이는 접속 여유 또는 ! 있음(넓은 화면 접힘이면 대상 없음 허용)')
+    checks.ok((bool(targets) or folded_wide) and all(row['overlap'] == 0 for row in targets),
               f'{label} Q6(b) 모든 관측 프레임 사각형 겹침 0: {targets[:3]} (프레임 {len(samples)})')
     checks.ok(all(s['phase'] == 'result' and s['resultRound'] == 1 for s in samples),
               label + ' Q6(b) 첫 달 실제 결과 확인')

@@ -185,14 +185,21 @@ def u9(checks, context, base, pages):
     close_drawer(team)
     dismiss_guide(team)
     lens_on(team)
+    # rev20 M(#93): 1280 계획 단계도 범례·접속 여유를 '! 범례·여유' 상자에 기본으로 접는다.
+    # 학생이 단추를 눌러 펼친 상태에서 같은 두 줄의 보임·교차·static을 본다(#58 고정 사각형은 옛 펼침 배치 값이라 대체).
+    toggle = team.locator('#lg-map-key-toggle')
+    toggle.wait_for(state='visible')
+    if not toggle.evaluate("e => !!e.closest('details')?.open"):
+        toggle.click()
+    settle(team)
     g = keys_visible(checks, team, 'U9 팀 1280')
     checks.ok(g['team'] is True, 'U9 팀 지도 선택자 확인')
-    # #58 측정 표가 명시한 팀 1280 사각형과 계산값. 다른 UI에서 얻은 값으로 갱신하지 않는다.
-    for key, rect in (('town', (8, 711, 428, 762)), ('lens', (8, 770, 185, 800))):
+    for key in ('town', 'lens'):
         actual = g[key]
-        checks.ok(all(abs(actual['rect'][k] - value) <= 1 for k, value in zip(('left', 'top', 'right', 'bottom'), rect)),
-                  f'U9 팀 {key} 사각형 ±1px')
-        checks.ok(not actual['popup'], f'U9 팀 {key} 1280 팝업 밖 배치')
+        checks.ok(actual['inView'] and actual['rect']['bottom'] <= team.evaluate(
+            "() => document.querySelector('#bd-dock').getBoundingClientRect().top") + 1,
+                  f'U9 팀 {key} 펼친 상자 안 화면 안·도구 막대 위(rev20 M)')
+        checks.ok(actual['popup'], f'U9 팀 {key} 1280 접는 상자 안 배치(rev20 M)')
     checks.ok(g['town']['zIndex'] == '29', 'U9 팀 범례 계산 z-index 29 보존')
     team_before = g
     overflow(checks, team, 'U9 팀 1280')

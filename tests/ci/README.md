@@ -73,7 +73,7 @@ Node는 24.21.0, 브라우저 검사 파이썬은 3.14(맥 로컬은 3.14.7, 끝
 
 ### 샤드 배분
 
-`suites.txt`의 예상초 합이다. `rev14`·`rev14b`의 예상초는 #54 맥 최종 확인(0405541), `rev15`·`rev16`·`feedback`·`sheet`는 갈래 맥 로컬 실측의 실행 시간이다(rev16은 `--all` 실행에서 196초). rev17은 장면 수로 잡은 임시값 420초이며 맥 로컬 첫 실행 뒤 실측으로 바꾼다. rev18은 갈래 맥 로컬 `--all` 실측(78초, 80으로 올림)이다. rev19는 갈래 맥 로컬 `--all` 실측(48초, 60으로 올림)이다.
+`suites.txt`의 예상초 합이다. `rev14`·`rev14b`의 예상초는 #54 맥 최종 확인(0405541), `rev15`·`rev16`·`feedback`·`sheet`는 갈래 맥 로컬 실측의 실행 시간이다(rev16은 `--all` 실행에서 196초). rev17은 장면 수로 잡은 임시값 420초이며 맥 로컬 첫 실행 뒤 실측으로 바꾼다. rev18은 갈래 맥 로컬 `--all` 실측(78초, 80으로 올림)이다. rev19는 갈래 맥 로컬 `--all` 실측(48초, 60으로 올림)이다. rev20은 갈래 맥 로컬 실측(228초, 230으로 올림)이다.
 
 | 샤드 | 검사 | 예상초 합 |
 |---|---|---|
@@ -81,7 +81,7 @@ Node는 24.21.0, 브라우저 검사 파이썬은 3.14(맥 로컬은 3.14.7, 끝
 | 2 | rev16, ux_task:desktop, storage | 723 |
 | 3 | s7, d82ux, solo, sheet | 709 |
 | 4 | rev15, rev11, rev8c, ux_s2fix2, ux_coach | 695 |
-| 5 | rev10, d80b, econui, ux_task:tablet, peek, webkit | 684 |
+| 5 | rev20, rev10, d80b, econui, ux_task:tablet, peek, webkit | 914 |
 | 6 | rev17, rev12, s8n, fx_replay, v3a, snaprender, feedback | 1037 |
 | 7 | rev13, rev14b, rev19, fx_end, fx_town (fx_map은 맥 전용) | 734 |
 | 8 | rev14, rev18, rev9, score1, ux_s2fix, ux_task:mobile, next | 745 |
@@ -92,7 +92,7 @@ Node는 24.21.0, 브라우저 검사 파이썬은 3.14(맥 로컬은 3.14.7, 끝
 
 ## 판정 규칙
 
-검사마다 위에서부터 처음 걸리는 것으로 정한다. 기준 수치는 `baseline-counts.txt`에 그 검사의 줄이 있을 때만 본다(지금 `suites.txt`의 모든 줄, 37종).
+검사마다 위에서부터 처음 걸리는 것으로 정한다. 기준 수치는 `baseline-counts.txt`에 그 검사의 줄이 있을 때만 본다(지금 `suites.txt`의 모든 줄, 41종).
 
 1. 상태 `missing`(필수 검사 파일 없음)과 `unlisted`(Node 목록에 없는 검사 파일)는 실패, `skip`(선택 검사 파일 없음)은 건너뜀이다.
 2. 로그가 없거나 비어 있으면 실패다.

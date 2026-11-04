@@ -85,6 +85,11 @@
     C1: "{설비} 놓을 수 있는 칸"
   };
   const rev19Copy = (key, values = {}) => REV19_COPY[key].replace(/\{([^{}]+)\}/g, (_, name) => values[name] ?? "");
+  const REV20_COPY = {
+    A1: "시험 정전 {시험}%가 목표 {목표}%보다 커요 · 설비·송전선을 더해 다시 시험하거나, 그대로 '준비'를 눌러도 돼요",
+    A2: "운영 끝 · 숫자 칸 아래 '{주제} 예측' 줄에서 내 예측과 실제를 비교해요"
+  };
+  const rev20Copy = (key, values = {}) => REV20_COPY[key].replace(/\{([^{}]+)\}/g, (_, name) => values[name] ?? "");
   const ISSUE_MARK_MAX = 4; // G: 한 번에 짚는 미연결 설비 상한.
   const REV13_COPY = { D1: "+빚 한도" };
   const OUTAGE_DISPLAY = new WeakMap();
@@ -413,7 +418,7 @@
     flushHost();
     L.resultReplayWait?.();
     L.regionObserver?.disconnect(); L.hudObserver?.disconnect(); L.barObserver?.disconnect(); L.guidanceObserver?.disconnect();
-    L.panelObserver?.disconnect(); L.mapKeyObserver?.disconnect(); window.removeEventListener("resize", L.mapResize);
+    L.panelObserver?.disconnect(); L.mapKeyObserver?.disconnect(); L.mapKeyMediaOff?.(); window.removeEventListener("resize", L.mapResize);
     if (L.watchOutside) document.removeEventListener("pointerdown", L.watchOutside, true);
     BG.setViewInset?.({ right: 0 });
     clearInterval(L.guidanceTimer); L.guidanceTimer = null; if (L.guidanceFrame) cancelAnimationFrame(L.guidanceFrame); L.guidanceFrame = 0;
@@ -836,6 +841,16 @@
   function coachSteps(issues, n = {}) {
     // 말풍선 gridWaitInfo도 hostLimited가 없는 설비에는 접속 대기를 적용하지 않는다.
     const immediate = coachImmediate();
+    const V = L.role === "solo" || L.role === "host" ? L.S : L.snap;
+    const rd = V && C.roundsOf(V)[Math.max(0, (V.round || 1) - 1)];
+    const trial = V?.phase === "plan" && rd ? matchingTrial(V, rd, L.team) : null;
+    const goal = trial && C.goalsOf(V).unsPct;
+    // rememberTrial의 unsPct는 trialGoals와 같은 100 * res.unsTotal / res.tot.dem(수요 0이면 0).
+    const promise = trial && trial.unsPct > goal
+      ? rev20Copy("A1", { 시험: fmt(trial.unsPct, 2), 목표: fmt(goal, 2) })
+      : "준비 → 근거·방향·확신 고르고 약속해요";
+    const details = document.querySelector("#lg-promise-summary [data-promise-details]");
+    const topic = details && promiseTopic(V, n);
     const build = immediate ? `${immediate[1].name} 하나 놓기 · 접속 대기 없어요` : "설비 하나 놓기 · 말풍선의 '대기'를 확인해요";
     const target = coachLineTarget();
     let line = `마을까지 이어요 · 미연결 0기 · 대기 ${issues.waiting}기`;
@@ -854,9 +869,9 @@
       [build, "화력", '[data-group="fire"]'],
       [line, "송전선", '[data-tool="line"]'],
       ["시험 1주를 돌려 결과를 확인해요", "시험 1주", '[data-run="7"]'],
-      ["준비 → 근거·방향·확신 고르고 약속해요", L.snap?.phase === "plan" && readyBlockedForCoach() ? "남은 칸 채우기" : L.awaitReady ? "약속하고 준비" : "준비", "#lg-ready"],
+      [promise, L.snap?.phase === "plan" && readyBlockedForCoach() ? "남은 칸 채우기" : L.awaitReady ? "약속하고 준비" : "준비", "#lg-ready"],
       // 결과 단계에서는 막대 '결과'가 서랍을 닫는 토글이라 판정 줄 단추를 짚는다(검토 major 2).
-      ["운영 끝 · 결과 맨 위에서 내 예측과 실제를 비교해요", document.querySelector("#lg-promise-summary [data-promise-details]") ? "예측 자세히" : "결과", document.querySelector("#lg-promise-summary [data-promise-details]") ? "#lg-promise-summary [data-promise-details]" : '#lg-bar [data-panel="result"]'],
+      [details ? rev20Copy("A2", { 주제: topic === "cash" ? "현금" : topic === "grid" ? "계통" : "정전" }) : "운영 끝 · 결과 맨 위에서 내 예측과 실제를 비교해요", details ? "예측 자세히" : "결과", details ? "#lg-promise-summary [data-promise-details]" : '#lg-bar [data-panel="result"]'],
       coachHasCards()
         ? ["이번 달 변화의 원인 하나를 골라 열어 봐요", "원인 열기", document.querySelector("#lg-outage-open") ? "#lg-outage-open" : "#lg-outage-carry"]
         : ["이번 달은 고를 원인 카드가 없어요 · 확인하고 넘어가요", "확인하고 다음", "#lg-missed"],
@@ -5846,7 +5861,7 @@
     // build.mount는 append 방식이다. 팀이 다시 mount할 때 숨긴 이전 루트도 제거한다.
     // 돌아갈 입력 서랍은 leaveTeamCity가 L.home.panel로 따로 보존한다.
     L.hudObserver?.disconnect(); L.barObserver?.disconnect(); L.syncMoney = null;
-    L.panelObserver?.disconnect(); L.mapKeyObserver?.disconnect(); window.removeEventListener("resize", L.mapResize);
+    L.panelObserver?.disconnect(); L.mapKeyObserver?.disconnect(); L.mapKeyMediaOff?.(); window.removeEventListener("resize", L.mapResize);
     if (L.watchOutside) document.removeEventListener("pointerdown", L.watchOutside, true);
     L.watchOutside = null; // 새 관전 지도가 이전 범례의 처리기를 다시 감싸지 않게 참조도 해제한다.
     L.viewInset = null; BG.setViewInset?.({ right: 0 });
@@ -6046,8 +6061,10 @@
     button.addEventListener("click", () => BG.hideTouchTip());
     button.textContent = `! ${rev12Copy("K1v")}`;
     button.setAttribute("aria-label", rev12Copy("K1a"));
+    const narrow = window.matchMedia("(max-width: 1100px)");
     const sync = () => {
-      const folded = root.dataset.lgPhase === "plan" && ["solo", "team"].includes(L.role) && window.matchMedia("(max-width: 1100px)").matches;
+      const phase = root.dataset.lgPhase;
+      const folded = ["solo", "team"].includes(L.role) && (narrow.matches ? phase === "plan" : ["plan", "review"].includes(phase));
       // 같은 DOM을 옮겨 렌즈의 hidden·숫자 갱신 경로를 보존한다. 경고는 상자 밖에 둔다.
       const townParent = folded ? pop : keys, gridParent = folded && grid.dataset.warn !== "true" ? pop : keys;
       if (town.parentElement !== townParent) townParent.prepend(town);
@@ -6056,6 +6073,9 @@
       if (info.hidden) { info.open = false; delete info.dataset.pinned; }
     };
     L.mapKeyObserver?.disconnect();
+    L.mapKeyMediaOff?.();
+    narrow.addEventListener("change", sync);
+    L.mapKeyMediaOff = () => narrow.removeEventListener("change", sync);
     L.mapKeyObserver = new MutationObserver(sync);
     L.mapKeyObserver.observe(root, { attributes: true, attributeFilter: ["data-lg-phase"] });
     for (const el of [town, grid]) L.mapKeyObserver.observe(el, { attributes: true, attributeFilter: ["hidden", "data-warn"] });
